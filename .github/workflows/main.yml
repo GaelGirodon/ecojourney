@@ -22,12 +22,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
       - run: npm ci
-      # - run: npm run lint
+      - run: npm run lint
       - run: npm run build
       - run: npm pack
       - uses: actions/upload-artifact@v3
         with:
-          name: ecojourney
+          name: tarball
           path: ecojourney-*.tgz
 
   test:
@@ -48,7 +48,7 @@ jobs:
           token: ${{ secrets.GIST_TOKEN }}
       - uses: actions/upload-artifact@v3
         with:
-          name: test-results
+          name: test-reports
           path: |
             coverage/*coverage.xml
             test-results.xml

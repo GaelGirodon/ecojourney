@@ -1,6 +1,7 @@
 import process from "node:process";
 import playwright, { Browser, BrowserContext, BrowserContextOptions, devices, LaunchOptions, Page } from "playwright-core";
 import log from "../util/log.js";
+import { ActionArguments } from "./browsing/action.js";
 import { Scenario } from "./collection/artifact.js";
 import { Config } from "./config.js";
 
@@ -27,9 +28,6 @@ export class Context {
     /** Browser page */
     private _page?: Page;
 
-    /** Context data */
-    private data: { [key: string]: any };
-
     /** Handler called when a new page is created */
     newPageHandler?: (page: Page) => Promise<void>;
 
@@ -40,7 +38,6 @@ export class Context {
         this.startedAt = new Date();
         this.runId = this.startedAt.getTime();
         this.scenario = new Scenario();
-        this.data = {};
     }
 
     /*
@@ -49,21 +46,11 @@ export class Context {
 
     /**
      * Get data that can be injected in action properties.
+     * @param args Action arguments from the parent procedure
      * @returns The template data
      */
-    public templateData() {
-        return Object.assign({ env: process.env }, this.data);
-    }
-
-    /**
-     * Get a context with additional data.
-     * @param data Additional template data
-     * @returns The mutated context
-     */
-    public withData(data: { [key: string]: any }): Context {
-        const copy = Object.assign(new Context(this.config), this);
-        Object.assign(copy.data, data);
-        return copy;
+    public data(args: ActionArguments = {}) {
+        return { env: process.env, args };
     }
 
     /*

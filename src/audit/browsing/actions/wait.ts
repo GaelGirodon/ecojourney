@@ -17,8 +17,8 @@ export class WaitAction extends Action {
     /** The selector to use when resolving the DOM element */
     readonly selector: string = "";
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         if (Array.isArray(props) && WaitAction.states.includes(props[0]) || props.state) {
             this.state = Array.isArray(props) ? props[0] : props.state;
         } else {

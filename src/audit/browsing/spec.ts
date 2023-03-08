@@ -3,9 +3,6 @@
  */
 export interface ActionSpec {
 
-    /** Action display name */
-    name: string | undefined;
-
     /**
      * Action definition
      *

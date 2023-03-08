@@ -14,15 +14,15 @@ export class FillAction extends Action {
     /** The value to set (supports templating) */
     readonly value: string;
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.selector = Array.isArray(props) ? props[0] : props.selector;
         this.value = Array.isArray(props) ? props[1] : props.value;
     }
 
     async run(ctx: Context) {
         log.info("Fill '%s' with '%s'", this.selector, this.value);
-        const value = render(this.value, ctx.templateData());
+        const value = render(this.value, ctx.data(this.args));
         await ctx.page().locator(this.selector).first().fill(value);
         return { value };
     }

@@ -8,7 +8,7 @@ describe("ClickAction", () => {
             { type: "object", props: { selector: ".s" }, selector: ".s" }
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
-                const action = new ClickAction("", t.props);
+                const action = new ClickAction(t.props);
                 assert.equal(action.selector, t.selector);
             });
         }

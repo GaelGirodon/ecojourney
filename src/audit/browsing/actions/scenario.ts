@@ -17,8 +17,8 @@ export class ScenarioAction extends Action {
     /** Exclude this scenario from analysis */
     readonly exclude: boolean = false;
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.name = Array.isArray(props) ? props[0] : props.name;
         if (!Array.isArray(props)) {
             const newContext = props.newContext as string | boolean;

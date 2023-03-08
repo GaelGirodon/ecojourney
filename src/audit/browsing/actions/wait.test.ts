@@ -10,7 +10,7 @@ describe("WaitAction", () => {
             { type: "object (2)", props: { selector: ".s" }, state: undefined, selector: ".s" }
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
-                const action = new WaitAction("", t.props);
+                const action = new WaitAction(t.props);
                 assert.equal(action.state, t.state);
                 assert.equal(action.selector, t.selector);
             });

@@ -13,8 +13,8 @@ export class UploadAction extends Action {
     /** Input files to set */
     readonly files: string[];
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.selector = Array.isArray(props) ? props[0] : props.selector;
         this.files = Array.isArray(props) ? props.slice(1)
             : (props.files ? props.files : [props.file]);

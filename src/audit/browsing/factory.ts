@@ -22,13 +22,26 @@ import { ActionSpec } from "./spec.js";
  * @returns Actions ready to be executed
  */
 export function createActions(manifest: Manifest) {
-
     //
     // Create actions from specifications
     //
 
     log.debug("Load actions");
-    const actions = (manifest.actions || []).map(a => createAction(a));
+    const procedures = manifest.procedures ?? {};
+    const actions = (manifest.actions || []).flatMap(spec => {
+        const a = createAction(spec);
+        if (!(a instanceof ProcedureAction)) return [a];
+        if (!(a.name in procedures))
+            throw new Error(`Procedure '${a.name}' is not defined`);
+        return procedures[a.name].map((nSpec, i) => {
+            const na = createAction(nSpec);
+            if (na instanceof ProcedureAction)
+                throw new Error(`Procedure nesting is not allowed, action #${i
+                    } in procedure '${a.name}' can't call '${na.name}'`);
+            na.args = a.args;
+            return na;
+        });
+    });
     log.debug("Actions loaded: %d actions", actions.length);
 
     //
@@ -40,56 +53,29 @@ export function createActions(manifest: Manifest) {
     const firstActionIndex = actions.findIndex(a => !(a instanceof ScenarioAction));
     if (firstActionIndex < 0 || !(actions[firstActionIndex] instanceof GotoAction)) {
         actions.splice(Math.max(firstActionIndex, 0), 0,
-            new GotoAction(undefined, { url: manifest.url }));
-        // TODO Check procedures
+            new GotoAction({ url: manifest.url }));
     }
 
     // Add a first scenario if omitted (implicit) in the manifest file
     if (!(actions[0] instanceof ScenarioAction)) {
-        actions.unshift(new ScenarioAction(undefined,
-            { name: manifest.name ?? manifest.url }));
+        actions.unshift(new ScenarioAction({ name: manifest.name ?? manifest.url }));
     }
 
     // Add a page analysis at the end if none was provided
     // (the user wants implicitly to analyse a single page)
     if (!actions.some(a => a instanceof PageAction)) {
-        actions.push(new PageAction(undefined,
-            { name: manifest.name ?? manifest.url }));
+        actions.push(new PageAction({ name: manifest.name ?? manifest.url }));
     }
 
     log.debug("Actions enhanced: %d actions", actions.length);
 
-    //
-    // Parse and check procedures
-    //
-    // TODO Inline procedures ?
-    //
-
-    log.debug("Load procedures");
-    const procedures: { [name: string]: Action[] } = {};
-    if (manifest.procedures) {
-        for (const [proc, actions] of Object.entries(manifest.procedures)) {
-            procedures[proc] = actions.map(a => createAction(a));
-        }
-    }
-    for (const a of actions) {
-        if (a instanceof ProcedureAction && !procedures[a.name]) {
-            throw new Error(`Procedure '${a.name}' is not defined`);
-        }
-    }
-    log.debug("Procedures loaded: %d procedures", Object.values(procedures).length);
-
-    return new ActionIterator(actions, procedures);
+    return new ActionIterator(actions);
 }
 
 /**
  * Built-in actions
  */
-const factories: {
-    [key: string]: {
-        new(description: string | undefined, props: ActionProperties): Action
-    }
-} = {
+const factories: { [key: string]: { new(props: ActionProperties): Action } } = {
     "check": CheckAction,
     "click": ClickAction,
     "fill": FillAction,
@@ -106,12 +92,12 @@ const factories: {
 
 /**
  * Create an action from its definition.
- * @param a Action definition loaded from the manifest file
+ * @param spec Action definition loaded from the manifest file
  * @returns The action
  */
-function createAction(a: ActionSpec): Action {
-    const id = Object.keys(a).filter(k => k !== "name")[0];
-    const value = a[id] as (string | { [key: string]: string });
+function createAction(spec: ActionSpec): Action {
+    const id = Object.keys(spec)[0];
+    const value = spec[id] as (string | { [key: string]: string });
     const props = typeof value === "string" ? value.split(/, */g) : value;
-    return new factories[id]!(a.name, props);
+    return new factories[id]!(props);
 }

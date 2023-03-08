@@ -5,11 +5,10 @@ import { Context } from "../context.js";
  */
 export abstract class Action {
 
-    constructor(
-        /** Action description */
-        public readonly description: string | undefined
-    ) { };
+    /** Action arguments from the parent procedure */
+    public args: ActionArguments = {};
 
+    constructor() { };
 
     /**
      * Run the action on the given context.
@@ -24,3 +23,8 @@ export abstract class Action {
  * Action properties from the manifest file
  */
 export type ActionProperties = { [key: string]: any } | string[];
+
+/**
+ * Action arguments from the parent procedure
+ */
+export type ActionArguments = { [key: string]: any };

@@ -51,7 +51,7 @@
           "title": "Headers",
           "description": "Additional HTTP headers to be sent with every request",
           "type": "object",
-          "example": {"X-User": "user"},
+          "example": { "X-User": "user" },
           "patternProperties": {
             "^[A-Za-z0-9_-]+$": {
               "type": "string"
@@ -85,7 +85,7 @@
           "title": "Formats",
           "description": "Output report formats",
           "type": "array",
-          "example": ["json"],
+          "example": [ "json" ],
           "items": {
             "title": "Items",
             "description": "Output report format",
@@ -161,10 +161,6 @@
         "description": "A browsing action",
         "type": "object",
         "properties": {
-          "description": {
-            "description": "Action description",
-            "type": "string"
-          },
           "check": {
             "title": "Check or uncheck a checkbox or a radio button.",
             "oneOf": [
@@ -448,7 +444,7 @@
                     "title": "Values",
                     "description": "Options to select",
                     "type": "array",
-                    "example": ["fr", "en"],
+                    "example": [ "fr", "en" ],
                     "items": {
                       "title": "Value",
                       "description": "The option to select",
@@ -490,7 +486,7 @@
                     "title": "Files",
                     "description": "Input files to set",
                     "type": "array",
-                    "example": ["myfile1.txt", "myfile2.txt"],
+                    "example": [ "myfile1.txt", "myfile2.txt" ],
                     "items": {
                       "title": "File",
                       "description": "The input file to set",
@@ -547,10 +543,6 @@
         },
         "minProperties": 1,
         "maxProperties": 1,
-        "dependentSchemas": {
-          "description": { },
-          "maxProperties": 2
-        },
         "additionalProperties": false
       }
     }

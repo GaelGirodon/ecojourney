@@ -1,16 +1,16 @@
+import log from "../util/log.js";
 import { Analyser } from "./analysis/analyser.js";
 import { aggregateResults, PageResult } from "./analysis/result.js";
 import { PageAction } from "./browsing/actions/page.js";
 import { createActions } from "./browsing/factory.js";
+import { ActionIterator } from "./browsing/iterator.js";
 import { ArtifactCollector } from "./collection/collector.js";
 import { Config, loadConfig } from "./config.js";
 import { Context } from "./context.js";
 import { loadManifest } from "./manifest/load.js";
+import { Manifest } from "./manifest/manifest.js";
 import { ReportData } from "./report/model.js";
 import { report } from "./report/report.js";
-import { Manifest } from "./manifest/manifest.js";
-import { ActionIterator } from "./browsing/iterator.js";
-import log from "../util/log.js";
 
 /**
  * Website eco-design compliance audit
@@ -41,7 +41,7 @@ export class Audit {
             try {
                 await this.audit();
                 done = true;
-            } catch (cause: any) {
+            } catch (cause) {
                 if (r >= this.config.retries) throw new Error("Audit failed", { cause });
                 log.error("Audit failed, retrying (%i/%i): %s", r + 1, this.config.retries,
                     log.formatError(cause));

@@ -8,7 +8,7 @@ describe("PageAction", () => {
             { type: "object", props: { name: "name" }, name: "name" }
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
-                const action = new PageAction("", t.props);
+                const action = new PageAction(t.props);
                 assert.equal(action.name, t.name);
             });
         }

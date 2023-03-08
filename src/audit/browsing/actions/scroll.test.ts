@@ -8,7 +8,7 @@ describe("ScrollAction", () => {
             { type: "object", props: { selector: ".s" }, selector: ".s" }
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
-                const action = new ScrollAction("", t.props);
+                const action = new ScrollAction(t.props);
                 assert.equal(action.selector, t.selector);
             });
         }

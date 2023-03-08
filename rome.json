@@ -4,8 +4,14 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "complexity": {
+        "useSimplifiedLogicExpression": "warn"
+      },
+      "performance": {
+        "noDelete": "warn"
+      },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "off"
       }
     }
   }

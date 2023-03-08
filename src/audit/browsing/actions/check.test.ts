@@ -12,7 +12,7 @@ describe("CheckAction", () => {
             { type: "object (long/uncheck)", props: { selector: "#s", state: "uncheck" }, selector: "#s", state: "uncheck" }
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
-                const action = new CheckAction("", t.props);
+                const action = new CheckAction(t.props);
                 assert.equal(action.selector, t.selector);
                 assert.equal(action.state, t.state);
             });

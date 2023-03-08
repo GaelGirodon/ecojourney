@@ -10,8 +10,8 @@ export class ScrollAction extends Action {
     /** The selector to use when resolving the DOM element */
     readonly selector: string;
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.selector = Array.isArray(props) ? props[0] : props.selector;
     }
 

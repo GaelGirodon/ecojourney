@@ -13,8 +13,8 @@ export class SelectAction extends Action {
     /** Option(s) to select */
     readonly values: string[];
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.selector = Array.isArray(props) ? props[0] : props.selector;
         this.values = Array.isArray(props) ? props.slice(1)
             : (props.values ? props.values : [props.value]);

@@ -11,13 +11,13 @@ export class PageAction extends Action {
     /** The page name */
     readonly name: string;
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.name = Array.isArray(props) ? props[0] : props.name;
     }
 
     async run(ctx: Context) {
-        const name = render(this.name, ctx.templateData());
+        const name = render(this.name, ctx.data(this.args));
         log.info("Mark page '%s' to analyse", name);
         await ctx.page().waitForLoadState("networkidle");
         return { name };

@@ -8,7 +8,7 @@ import { format } from "node:util";
  */
 function debug(message: string, ...optionalParams: any[]) {
     if (process.env.VERBOSE) {
-        console.log("[debug] " + message, ...optionalParams);
+        console.log(`[debug] ${message}`, ...optionalParams);
     }
 }
 
@@ -18,7 +18,7 @@ function debug(message: string, ...optionalParams: any[]) {
  * @param optionalParams Log message parameters
  */
 function info(message: string, ...optionalParams: any[]) {
-    console.log("[info] " + message, ...optionalParams);
+    console.log(`[info] ${message}`, ...optionalParams);
 }
 
 /**
@@ -27,7 +27,7 @@ function info(message: string, ...optionalParams: any[]) {
  * @param optionalParams Log message parameters
  */
 function warn(message: string, ...optionalParams: any[]) {
-    console.error("[warn] " + message, ...optionalParams);
+    console.error(`[warn] ${message}`, ...optionalParams);
 }
 
 /**
@@ -36,7 +36,7 @@ function warn(message: string, ...optionalParams: any[]) {
  * @param optionalParams Log message parameters
  */
 function error(message: string, ...optionalParams: any[]) {
-    console.error("[error] " + message, ...optionalParams);
+    console.error(`[error] ${message}`, ...optionalParams);
 }
 
 /**
@@ -45,7 +45,7 @@ function error(message: string, ...optionalParams: any[]) {
  * @returns Error formatted as a string
  */
 function formatError(err: any) {
-    return format("%s" + (err.cause ? " (%s)" : ""),
+    return format(`%s${err.cause ? " (%s)" : ""}`,
         err?.message ?? err, err?.cause?.message ?? err?.cause)
 }
 

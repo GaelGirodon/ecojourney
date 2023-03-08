@@ -8,7 +8,7 @@ describe("ProcedureAction", () => {
             { type: "object", props: { name: "name", args: { key: "value" } }, name: "name", args: { key: "value" } }
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
-                const action = new ProcedureAction("", t.props);
+                const action = new ProcedureAction(t.props);
                 assert.equal(action.name, t.name);
                 assert.deepEqual(action.args, t.args);
             });

@@ -1,6 +1,6 @@
 import log from "../../../util/log.js";
 import { Context } from "../../context.js";
-import { Action, ActionProperties } from "../action.js";
+import { Action, ActionArguments, ActionProperties } from "../action.js";
 
 /**
  * Execute actions from a procedure.
@@ -11,10 +11,10 @@ export class ProcedureAction extends Action {
     readonly name: string;
 
     /** Procedure arguments */
-    readonly args: { [key: string]: string };
+    readonly args: ActionArguments;
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.name = Array.isArray(props) ? props[0] : props.name;
         this.args = !Array.isArray(props) ? (props.args ?? {}) : {};
     }

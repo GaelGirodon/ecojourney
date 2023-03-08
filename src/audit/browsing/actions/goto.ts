@@ -10,8 +10,8 @@ export class GotoAction extends Action {
     /** The target HTTP/HTTPS URL */
     readonly url: string;
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.url = Array.isArray(props) ? props[0] : props.url;
     }
 

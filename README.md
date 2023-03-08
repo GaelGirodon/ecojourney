@@ -279,10 +279,10 @@ url: https://mywebsite.net
 ```
 
 | Name          | Description                                               | Required |
-| ------------- | --------------------------------------------------------- | -------- |
-| `name`        | Name of the web application                               | 🔲        |
-| `description` | Description of the web application or of the current test | 🔲        |
-| `url`         | Main/root URL of the web application                      | ☑️        |
+| ------------- | --------------------------------------------------------- | :------: |
+| `name`        | Name of the web application                               |    🔲     |
+| `description` | Description of the web application or of the current test |    🔲     |
+| `url`         | Main/root URL of the web application                      |    ☑️     |
 
 #### Configuration
 
@@ -361,9 +361,9 @@ _Argument:_ the selector to use when resolving the DOM element and the state to 
 ```
 
 | Property   | Type     | Description                                                 | Required |
-| ---------- | -------- | ----------------------------------------------------------- | -------- |
-| `selector` | `string` | The selector to use when resolving the DOM element          | ☑️        |
-| `state`    | `string` | The state to set (`check` or `uncheck`, default to `check`) | 🔲        |
+| ---------- | -------- | ----------------------------------------------------------- | :------: |
+| `selector` | `string` | The selector to use when resolving the DOM element          |    ☑️     |
+| `state`    | `string` | The state to set (`check` or `uncheck`, default to `check`) |    🔲     |
 
 ##### `click`
 
@@ -385,8 +385,8 @@ _Argument:_ the selector to use when resolving the DOM element
 ```
 
 | Property   | Type     | Description                                        | Required |
-| ---------- | -------- | -------------------------------------------------- | -------- |
-| `selector` | `string` | The selector to use when resolving the DOM element | ☑️        |
+| ---------- | -------- | -------------------------------------------------- | :------: |
+| `selector` | `string` | The selector to use when resolving the DOM element |    ☑️     |
 
 ##### `fill`
 
@@ -409,9 +409,9 @@ _Argument:_ the selector to use when resolving the DOM element and the value to 
 ```
 
 | Property   | Type     | Description                                        | Required |
-| ---------- | -------- | -------------------------------------------------- | -------- |
-| `selector` | `string` | The selector to use when resolving the DOM element | ☑️        |
-| `value`    | `string` | The value to set (supports templating)             | ☑️        |
+| ---------- | -------- | -------------------------------------------------- | :------: |
+| `selector` | `string` | The selector to use when resolving the DOM element |    ☑️     |
+| `value`    | `string` | The value to set (supports templating)             |    ☑️     |
 
 ##### `goto`
 
@@ -433,8 +433,8 @@ _Argument:_ the target HTTP/HTTPS URL
 ```
 
 | Property | Type     | Description               | Required |
-| -------- | -------- | ------------------------- | -------- |
-| `url`    | `string` | The target HTTP/HTTPS URL | ☑️        |
+| -------- | -------- | ------------------------- | :------: |
+| `url`    | `string` | The target HTTP/HTTPS URL |    ☑️     |
 
 ##### `page`
 
@@ -456,8 +456,8 @@ _Argument:_ the page name
 ```
 
 | Property | Type     | Description   | Required |
-| -------- | -------- | ------------- | -------- |
-| `name`   | `string` | The page name | ☑️        |
+| -------- | -------- | ------------- | :------: |
+| `name`   | `string` | The page name |    ☑️     |
 
 ##### `procedure`
 
@@ -480,9 +480,9 @@ _Argument:_ the procedure name
 ```
 
 | Property | Type     | Description         | Required |
-| -------- | -------- | ------------------- | -------- |
-| `name`   | `string` | The procedure name  | ☑️        |
-| `args`   | `object` | Procedure arguments | 🔲        |
+| -------- | -------- | ------------------- | :------: |
+| `name`   | `string` | The procedure name  |    ☑️     |
+| `args`   | `object` | Procedure arguments |    🔲     |
 
 ##### `scenario`
 
@@ -506,10 +506,10 @@ _Argument:_ the scenario name
 ```
 
 | Property     | Type      | Description                                            | Required |
-| ------------ | --------- | ------------------------------------------------------ | -------- |
-| `name`       | `string`  | The scenario name                                      | ☑️        |
-| `newContext` | `boolean` | Close the current context and create a new one         | 🔲        |
-| `exclude`    | `boolean` | Exclude this scenario from analysis (only run actions) | 🔲        |
+| ------------ | --------- | ------------------------------------------------------ | :------: |
+| `name`       | `string`  | The scenario name                                      |    ☑️     |
+| `newContext` | `boolean` | Close the current context and create a new one         |    🔲     |
+| `exclude`    | `boolean` | Exclude this scenario from analysis (only run actions) |    🔲     |
 
 ##### `screenshot`
 
@@ -531,8 +531,8 @@ _Argument:_ the file path to save the image to
 ```
 
 | Property | Type     | Description                        | Required |
-| -------- | -------- | ---------------------------------- | -------- |
-| `path`   | `string` | The file path to save the image to | ☑️        |
+| -------- | -------- | ---------------------------------- | :------: |
+| `path`   | `string` | The file path to save the image to |    ☑️     |
 
 ##### `scroll`
 
@@ -554,8 +554,8 @@ _Argument:_ the selector to use when resolving the DOM element
 ```
 
 | Property   | Type     | Description                                        | Required |
-| ---------- | -------- | -------------------------------------------------- | -------- |
-| `selector` | `string` | The selector to use when resolving the DOM element | ☑️        |
+| ---------- | -------- | -------------------------------------------------- | :------: |
+| `selector` | `string` | The selector to use when resolving the DOM element |    ☑️     |
 
 ##### `select`
 
@@ -579,10 +579,10 @@ _Argument:_ the selector to use when resolving the DOM element and option(s) to 
 ```
 
 | Property   | Type     | Description                                        | Required |
-| ---------- | -------- | -------------------------------------------------- | -------- |
-| `selector` | `string` | The selector to use when resolving the DOM element | ☑️        |
-| `value`    | `string` | The option to select                               | 🔘        |
-| `values`   | `array`  | Options to select                                  | 🔘        |
+| ---------- | -------- | -------------------------------------------------- | :------: |
+| `selector` | `string` | The selector to use when resolving the DOM element |    ☑️     |
+| `value`    | `string` | The option to select                               |    🔘     |
+| `values`   | `array`  | Options to select                                  |    🔘     |
 
 ##### `upload`
 
@@ -606,10 +606,10 @@ _Argument:_ the selector to use when resolving the DOM element and input file(s)
 ```
 
 | Property   | Type     | Description                                        | Required |
-| ---------- | -------- | -------------------------------------------------- | -------- |
-| `selector` | `string` | The selector to use when resolving the DOM element | ☑️        |
-| `file`     | `string` | The input file to set                              | 🔘        |
-| `files`    | `array`  | Input files to set                                 | 🔘        |
+| ---------- | -------- | -------------------------------------------------- | :------: |
+| `selector` | `string` | The selector to use when resolving the DOM element |    ☑️     |
+| `file`     | `string` | The input file to set                              |    🔘     |
+| `files`    | `array`  | Input files to set                                 |    🔘     |
 
 ##### `wait`
 
@@ -638,9 +638,9 @@ _Argument:_ the selector to use when resolving the DOM element
 ```
 
 | Property   | Type     | Description                                        | Required |
-| ---------- | -------- | -------------------------------------------------- | -------- |
-| `state`    | `string` | The load state to wait for                         | 🔘        |
-| `selector` | `string` | The selector to use when resolving the DOM element | 🔘        |
+| ---------- | -------- | -------------------------------------------------- | :------: |
+| `state`    | `string` | The load state to wait for                         |    🔘     |
+| `selector` | `string` | The selector to use when resolving the DOM element |    🔘     |
 
 #### Procedures
 

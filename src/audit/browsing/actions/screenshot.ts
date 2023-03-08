@@ -11,8 +11,8 @@ export class ScreenshotAction extends Action {
     /** The file path to save the image to */
     readonly path: string;
 
-    constructor(description: string | undefined, props: ActionProperties) {
-        super(description);
+    constructor(props: ActionProperties) {
+        super();
         this.path = Array.isArray(props) ? props[0] : props.path;
     }
 

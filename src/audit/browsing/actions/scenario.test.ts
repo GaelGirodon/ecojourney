@@ -12,7 +12,7 @@ describe("ScenarioAction", () => {
             { type: "object (5)", props: { name: "name", newContext: "true", exclude: "true" }, name: "name", newContext: true, exclude: true }
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
-                const action = new ScenarioAction("", t.props);
+                const action = new ScenarioAction(t.props);
                 assert.equal(action.name, t.name);
                 assert.equal(action.newContext, t.newContext);
                 assert.equal(action.exclude, t.exclude);

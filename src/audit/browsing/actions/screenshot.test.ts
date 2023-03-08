@@ -8,7 +8,7 @@ describe("ScreenshotAction", () => {
             { type: "object", props: { path: "img.png" }, path: "img.png" }
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
-                const action = new ScreenshotAction("", t.props);
+                const action = new ScreenshotAction(t.props);
                 assert.equal(action.path, t.path);
             });
         }

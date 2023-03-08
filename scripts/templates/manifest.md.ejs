@@ -59,7 +59,7 @@ useful to avoid committing sensitive values such as user passwords.
 ```
 
 | Name | Description | Required |
-| ---- | ----------- | -------- |
+| ---- | ----------- | :------: |
 <% for (const [k, v] of Object.entries(manifest.properties).filter(p => p[1].type === "string")) { -%>
 | `<%- k %>` | <%- v.description %> | <%- manifest.required.includes(k) ? "☑️" : "🔲" %> |
 <% } -%>
@@ -135,7 +135,7 @@ _Argument:_ <%- uncap(prop.description) -%>
 ```
 
 | Property | Type | Description | Required |
-| -------- | ---- | ----------- | -------- |
+| -------- | ---- | ----------- | :------: |
 <% for (const [k, prop] of Object.entries(longSyntax.properties)) { -%>
 | `<%- k %>` | `<%- prop.type %>` | <%- prop.description -%> | <% -%>
 <%- longSyntax.required?.includes(k) ? "☑️" : (longSyntax.minProperties > 0 ? "🔘" : "🔲") %> |
