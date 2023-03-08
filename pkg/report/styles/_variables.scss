@@ -1,0 +1,43 @@
+@use "sass:color";
+
+//
+// Bulma customization
+//
+
+@import "/node_modules/bulma/sass/utilities/initial-variables.sass";
+
+// Global
+$body-line-height: 1;
+$primary: #10ac84;
+$link: #2f3640;
+
+// Menu
+$menu-item-active-background-color: $primary;
+$menu-list-link-padding: 0.4em 0.6em;
+$menu-nested-list-margin: 0.25em 0.75em;
+
+// Title
+$title-line-height: $body-line-height;
+$subtitle-line-height: $body-line-height;
+
+//
+// Global variables
+//
+
+$layout-width: calc($widescreen + 1px);
+$sidebar-width: 304px;
+$grades: (
+    "A": #00a851,
+    "B": #4fb947,
+    "C": #c1d82d,
+    "D": #fdd835,
+    "E": #fcba0b,
+    "F": #f3711a,
+    "G": #ee141f
+);
+$severities: (
+    "info": #00bcd4,
+    "minor": #ffb300,
+    "major": #ff6f00,
+    "critical": #e53935
+);

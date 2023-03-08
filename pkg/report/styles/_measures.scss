@@ -1,0 +1,75 @@
+@use "sass:string";
+
+//
+// Measures
+//
+
+// Tiles
+.measures {
+
+    .level {
+        margin-bottom: 0;
+
+        .level-item {
+            margin: 1rem 0;
+
+            .heading {
+                font-size: 12px;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+        }
+
+        &.measures-secondary {
+            border-top: solid 1px $white-ter;
+        }
+    }
+
+    @include from($tablet) {
+        padding: 0;
+
+        .level {
+            &.measures-primary .level-item {
+                width: 25%;
+            }
+
+            &.measures-secondary .level-item {
+                width: 20%;
+            }
+        }
+    }
+}
+
+// Letter grade
+.grade {
+    display: flex;
+    justify-content: center;
+    gap: 0.25em;
+
+    &::before {
+        content: "";
+        display: inline-block;
+        font-size: 0.75em;
+        font-weight: $weight-bold;
+        text-align: center;
+        width: 1.5em;
+        height: 1.5em;
+        line-height: 1.45em;
+        color: #ffffff;
+        border-radius: 100%;
+    }
+
+    @each $grade, $color in $grades {
+        &.g-#{string.to-lower-case($grade)} {
+            color: $color;
+
+            &::before {
+                content: $grade;
+                background-color: $color;
+            }
+        }
+    }
+
+}

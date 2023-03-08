@@ -2,12 +2,8 @@ import { Command, Option } from "commander";
 import { Audit } from "./audit/audit.js";
 import { Config, parseHttpHeader } from "./audit/config.js";
 import { init } from "./init/init.js";
+import { programName } from "./meta.js";
 import log from "./util/log.js";
-
-/**
- * Name of the current program
- */
-export const programName = "ecojourney";
 
 /**
  * Application entrypoint
@@ -75,7 +71,7 @@ export function cli(): Command {
             .env(`${envPrefix}_AUDIT_OUTPUT`))
         .addOption(new Option("-f, --formats [formats...]",
             "output report formats")
-            .choices(["json"])
+            .choices(["html", "json"])
             .env(`${envPrefix}_AUDIT_FORMATS`))
         .addOption(new Option("-s, --dry-run",
             "simulate the audit without actually running the browser")

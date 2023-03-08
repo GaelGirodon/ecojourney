@@ -3,6 +3,7 @@ import { readFile, writeFile } from "fs/promises";
 import { basename } from "path";
 import prompts from "prompts";
 import { stringify } from "yaml";
+import { programName } from "../meta.js";
 import { InitOptions } from "./options.js";
 import { questions } from "./prompt.js";
 import { schema } from "./schema.js";
@@ -46,5 +47,5 @@ export async function init(path: string | undefined, opts: InitOptions) {
     if (data.template.actions || data.proxy) {
         console.log("- Configure sensitive data using environment variables");
     }
-    console.log(`- Run the analysis:\n\n    ecojourney audit ${data.path}\n`);
+    console.log(`- Run the analysis:\n\n    ${programName} audit ${data.path}\n`);
 }

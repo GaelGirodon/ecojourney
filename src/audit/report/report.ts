@@ -1,11 +1,13 @@
 import log from "../../util/log.js";
+import { htmlReport } from "./html/html-report.js";
+import { jsonReport } from "./json/json-report.js";
 import { ReportData, ReportGenerator } from "./model.js";
-import { jsonReport } from "./json/jsonReport.js";
 
 /**
  * Report generators by format
  */
 const reportGenerators: { [key: string]: ReportGenerator } = {
+    "html": htmlReport,
     "json": jsonReport
 };
 

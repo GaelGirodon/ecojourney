@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { format as _ } from "node:util";
 import prompts from "prompts";
 import { parse } from "yaml";
+import { programName } from "../meta.js";
 import { init } from "./init.js";
 
 /** Path to the output directory */
@@ -14,7 +15,7 @@ const output = fileURLToPath(new URL("../../test/output", import.meta.url));
 mkdirSync(output, { recursive: true });
 
 /** Path to the initialised manifest file */
-const path = join(output, "ecojourney.yml");
+const path = join(output, `${programName}.yml`);
 
 /** Test cases */
 const tests = [

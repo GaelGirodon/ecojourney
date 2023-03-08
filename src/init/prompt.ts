@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { dirname } from "node:path";
 import { PromptObject } from "prompts";
+import { programName } from "../meta.js";
 import { isHttpUrl } from "../util/validation.js";
 
 /**
@@ -15,7 +16,7 @@ export function questions(path?: string): PromptObject[] {
             type: path ? null : "text",
             name: "path",
             message: "Manifest file location:",
-            initial: "ecojourney.yml",
+            initial: `${programName}.yml`,
             validate: (v: string) => {
                 if (!v) return "Path is required";
                 if (!v.match(/.ya?ml$/)) return "Manifest must be a YAML file";

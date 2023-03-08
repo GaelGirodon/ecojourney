@@ -1,16 +1,28 @@
-import { RuleId, Rule } from "./analysers/spec.js";
+import { Rule, RuleId } from "./analysers/spec.js";
 
 /**
  * A bad practice that needs to be fixed
  */
 export class Issue {
 
+    /** Time at which the issue was reported */
+    readonly time: Date;
+
     constructor(
         /** Issue rule metadata */
         readonly rule: Rule,
         /** Issue data */
         public data: IssueData
-    ) { }
+    ) {
+        this.time = new Date();
+    }
+
+    /**
+     * @returns The object to serialize as JSON
+     */
+    public toJSON() {
+        return { ...this.rule, ...this.data };
+    }
 
 }
 

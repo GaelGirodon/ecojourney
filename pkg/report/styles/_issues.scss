@@ -1,0 +1,62 @@
+//
+// Issues statistics and table
+//
+
+// Statistics
+.stats {
+    font-size: 1.5rem;
+}
+
+// Issues table
+.issues {
+    .severity {
+        justify-content: left;
+        font-weight: $weight-semibold;
+        text-transform: capitalize;
+    }
+
+    td {
+        code {
+            position: relative;
+            top: -1px;
+        }
+
+        .count {
+            background: $grey-lightest;
+            font-size: 0.9em;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+    }
+}
+
+// Severity level icon
+.severity {
+    display: flex;
+    justify-content: center;
+    gap: 0.25em;
+
+    &.s-none {
+        opacity: 0.5;
+    }
+
+    &::before {
+        content: "";
+        display: inline-block;
+        background-size: contain;
+        width: 1em;
+        height: 1em;
+        margin-top: 1px;
+    }
+
+    @each $severity, $color in $severities {
+        &.s-#{$severity} {
+            color: $color;
+
+            &::before {
+                content: url(/icons/#{$severity}.svg);
+            }
+        }
+    }
+
+}

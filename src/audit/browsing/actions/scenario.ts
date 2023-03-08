@@ -1,5 +1,5 @@
 import log from "../../../util/log.js";
-import { Scenario } from "../../collection/artifact.js";
+import { Scenario } from "../../analysis/result.js";
 import { Context } from "../../context.js";
 import { Action, ActionProperties } from "../action.js";
 
@@ -30,7 +30,8 @@ export class ScenarioAction extends Action {
 
     async run(ctx: Context) {
         log.info("Start scenario '%s'", this.name);
-        ctx.scenario = new Scenario(this.name, this.exclude);
+        ctx.scenario = new Scenario(ctx.actionIndex(this, true),
+            this.name, this.exclude);
         if (this.newContext) {
             await ctx.newPage(true);
         }

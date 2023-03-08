@@ -52,7 +52,7 @@ export const defaultConfig: Config = {
     headless: true,
     retries: 0,
     output: ".",
-    formats: ["json"],
+    formats: ["html", "json"],
     dryRun: false,
     verbose: false
 };

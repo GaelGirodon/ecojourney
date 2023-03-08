@@ -1,0 +1,6 @@
+# .gitignore
+
+data/
+dist/
+node_modules/
+*.log*

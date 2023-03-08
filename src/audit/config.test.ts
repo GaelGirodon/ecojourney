@@ -25,7 +25,7 @@ describe("config", () => {
                 headers: { "H1": "A", "H2": "B", "H3": "3" }, // CLI merges with manifest
                 retries: 3, // Manifest overrides default
                 output: ".", // Default
-                formats: ["json"], // Default,
+                formats: ["html", "json"], // Default,
                 proxy: { server: "myproxy.com:3128" }, // Manifest only
                 dryRun: true, // CLI overrides default
                 verbose: true // CLI overrides default

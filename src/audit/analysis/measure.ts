@@ -1,25 +1,35 @@
-import { MetricId, Metric } from "./analysers/spec.js";
 import * as units from "../../util/units.js";
+import { Metric, MetricId } from "./analysers/spec.js";
 
 /**
  * A measure
  */
 export class Measure {
 
+    /** Time at which the measure was taken */
+    readonly time: Date;
+
     constructor(
         /** Metric definition */
         readonly metric: Metric,
         /** Measure data */
         public data: MeasureData = { value: 0 }
-    ) { }
+    ) {
+        this.time = new Date();
+    }
 
     /**
      * Measure value to display (with unit)
      */
     public get value(): string {
-        if (this.metric.unit === "byte") return units.bytes(this.data.value);
-        if (this.metric.unit === "second") return units.seconds(this.data.value);
-        if (this.metric.unit) return `${units.round(this.data.value, 2)} ${this.metric.unit}`;
+        if (this.metric.unit === "byte")
+            return units.bytes(this.data.value);
+        if (this.metric.unit === "second")
+            return units.seconds(this.data.value);
+        if (this.metric.unit === "integer")
+            return `${units.round(this.data.value, 0)}`;
+        if (this.metric.unit)
+            return `${units.round(this.data.value, 2)} ${this.metric.unit}`;
         return `${units.round(this.data.value, 2)}`;
     }
 
@@ -76,6 +86,7 @@ export class Measure {
     public toJSON() {
         const output: { [key: string]: any } = {
             id: this.metric.id,
+            time: this.time,
             value: this.data.value,
             valueDisplay: this.value
         };

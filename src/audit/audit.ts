@@ -4,6 +4,7 @@ import { aggregateResults, PageResult } from "./analysis/result.js";
 import { PageAction } from "./browsing/actions/page.js";
 import { createActions } from "./browsing/factory.js";
 import { ActionIterator } from "./browsing/iterator.js";
+import { PageArtifact } from "./collection/artifact.js";
 import { ArtifactCollector } from "./collection/collector.js";
 import { Config, loadConfig } from "./config.js";
 import { Context } from "./context.js";
@@ -59,7 +60,7 @@ export class Audit {
         this.actions = createActions(this.manifest);
 
         this.analyser = await Analyser.init();
-        this.ctx = new Context(this.config);
+        this.ctx = new Context(this.config, this.actions.actions);
         this.collector = new ArtifactCollector();
         this.ctx.onNewPage(async page => this.collector.bind(page));
     }
@@ -82,8 +83,9 @@ export class Audit {
                 await this.collector.asyncTasks();
                 if (action instanceof PageAction && !this.ctx.scenario.exclude) {
                     // Analyse the current page with collected requests & responses
-                    const page = {
+                    const page: PageArtifact = {
                         ...this.collector.dump(),
+                        index: this.ctx.actionIndex(action, true),
                         name: output?.name ?? action.name,
                         frame: this.ctx.page().mainFrame()
                     };

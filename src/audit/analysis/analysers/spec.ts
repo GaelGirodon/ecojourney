@@ -18,7 +18,7 @@ export interface PageAnalyserSpec {
 export type MetricId = string;
 
 /** A metric unit */
-export type MetricUnit = "" | "second" | "byte";
+export type MetricUnit = "" | "second" | "byte" | "integer";
 
 /** A metric aggregation function */
 export type MetricAggregator = "sum" | "avg";

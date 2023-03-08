@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ecojourney report - {%= manifest.name ?? manifest.url %}</title>
+  <link rel="stylesheet" href="/styles/main.scss">
+</head>
+
+<body>
+
+  {% const full = result.scenarios.length > 1 || result.scenarios.flatMap(s => s.pages).length > 1; %}
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="title is-4">Ecojourney</div>
+      <p class="subtitle is-6">Eco-design website audit</p>
+    </div>
+    <div class="sidebar-body">
+      <nav class="menu">
+        <ul class="menu-list">
+          {%_ if (full) { -%}
+          <li>
+            <a href="#summary" class="is-active">
+              Summary
+            </a>
+          </li>
+          {%_ } -%}
+          {%_ for (const s of result.scenarios) { -%}
+          {%_ if (full) { -%}
+          <li>
+            <a href="#{%= s.id %}">{%= s.name %}</a>
+            <ul>
+          {%_ } -%}
+              {%_ for (const p of s.pages) { -%}
+              <li>
+                <a href="#{%= p.id %}">{%= p.name %}</a>
+              </li>
+              {%_ } -%}
+          {%_ if (full) { -%}
+            </ul>
+          </li>
+          {%_ } -%}
+          {%_ } -%}
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <header class="section">
+      <!-- Title -->
+      <h1 class="title">
+        {%= manifest.name || manifest.url %}
+      </h1>
+      <!-- Description -->
+      {%_ if (manifest.description) { -%}
+      <p class="subtitle">
+        {%= manifest.description %}
+      </p>
+      {%_ } -%}
+      <!-- Metadata -->
+      <div class="tags">
+        <span class="tag">
+          <span class="tag-label">URL</span>
+          <a href="{%= manifest.url %}">{%= manifest.url %}</a>
+        </span>
+        <span class="tag">
+          <span class="tag-label">Browser</span>
+          {%= config.browser %}
+        </span>
+        {%_ if (config.device) { -%}
+        <span class="tag">
+          <span class="tag-label">Device</span>
+          {%= config.device %}
+        </span>
+        {%_ } -%}
+        <span class="tag">
+          <span class="tag-label">Time</span>
+          {%= new Date(manifest.time).toLocaleString() %}
+        </span>
+      </div>
+    </header>
+    <!-- Report content -->
+    <!-- Summary -->
+    {%_ if (result.scenarios.length > 1 || result.scenarios.flatMap(s => s.pages).length > 1) { -%}
+    <hr>
+    <section class="section" data-spy>
+      <h2 id="summary" class="title is-4">
+        Summary
+      </h2>
+      <!-- Summary > Table -->
+      <table class="summary table is-striped is-hoverable is-fullwidth">
+        <thead>
+          <th></th>
+          <th>EcoIndex</th>
+          <th colspan="4">Issues</th>
+        </thead>
+        <tbody>
+        {%_ for (const s of result.scenarios) { -%}
+          <tr class="has-background-white-ter">
+            <th>
+              <a href="#{%= s.id %}">{%= s.name %}</a>
+            </th>
+            <th>
+              {%_ const eco = s.measures.find(m => m.metric.id === "eco-index") -%}
+              <span class="grade g-{%= eco.gradeLetter %}"
+                    title="EcoIndex {%= eco.gradeLetter.toUpperCase() %} grade">
+                {%= eco.value %}
+              </span>
+            </th>
+            <th>
+              <span class="severity {%= s.stats.critical > 0 ? '' : 's-none' %} s-critical"
+                    title="{%= s.stats.critical %} critical issue(s)">
+                {%= s.stats.critical %}
+              </span>
+            </th>
+            <th>
+              <span class="severity {%= s.stats.major > 0 ? '' : 's-none' %} s-major"
+                    title="{%= s.stats.major %} major issue(s)">
+                {%= s.stats.major %}
+              </span>
+            </th>
+            <th>
+              <span class="severity {%= s.stats.minor > 0 ? '' : 's-none' %} s-minor"
+                    title="{%= s.stats.minor %} minor issue(s)">
+                {%= s.stats.minor %}
+              </span>
+            </th>
+            <th>
+              <span class="severity {%= s.stats.info > 0 ? '' : 's-none' %} s-info"
+                    title="{%= s.stats.info %} info issue(s)">
+                {%= s.stats.info %}
+              </span>
+            </th>
+          </tr>
+        {%_ for (const p of s.pages) { -%}
+          <tr>
+            <td>
+              <a href="#{%= p.id %}">{%= p.name %}</a>
+            </td>
+            <td>
+              {%_ const eco = p.measures.find(m => m.metric.id === "eco-index") -%}
+              <span class="grade g-{%= eco.gradeLetter %}"
+                    title="EcoIndex {%= eco.gradeLetter.toUpperCase() %} grade">
+                {%= eco.value %}
+              </span>
+            </td>
+            <td>
+              <span class="severity {%= p.stats.critical > 0 ? '' : 's-none' %} s-critical"
+                    title="{%= p.stats.critical %} critical issue(s)">
+                {%= p.stats.critical %}
+              </span>
+            </td>
+            <td>
+              <span class="severity {%= p.stats.major > 0 ? '' : 's-none' %} s-major"
+                    title="{%= p.stats.major %} major issue(s)">
+                {%= p.stats.major %}
+              </span>
+            </td>
+            <td>
+              <span class="severity {%= p.stats.minor > 0 ? '' : 's-none' %} s-minor"
+                    title="{%= p.stats.minor %} minor issue(s)">
+                {%= p.stats.minor %}
+              </span>
+            </td>
+            <td>
+              <span class="severity {%= p.stats.info > 0 ? '' : 's-none' %} s-info"
+                    title="{%= p.stats.info %} info issue(s)">
+                {%= p.stats.info %}
+              </span>
+            </td>
+          </tr>
+        {%_ } -%}
+        {%_ } -%}
+        </tbody>
+      </table>
+      <!-- Summary > Measures -->
+      <h3 class="title is-6" data-collapse="#measures-summary" aria-expanded="false"
+          aria-controls="measures-summary" title="Toggle more measures">
+        Measures
+      </h3>
+      <div class="box measures">
+        <div class="measures-primary level is-flex-wrap-wrap">
+          {%_ for (const m of result.measures.filter(m => 50 > m.metric.order)) { -%}
+          <div class="level-item has-text-centered">
+            <div title="{%= m.metric.description %}">
+              <p class="heading">{%= m.metric.name %}</p>
+              <p class="title {% if (m.hasGrade) { %}grade g-{%= m.gradeLetter %}{% } %}">
+                {%= m.value %}
+              </p>
+            </div>
+          </div>
+          {%_ } -%}
+        </div>
+        <div class="measures-secondary level is-flex-wrap-wrap is-hidden" id="measures-summary">
+          {%_ for (const m of result.measures.filter(m => m.metric.order >= 50)) { -%}
+          <div class="level-item has-text-centered">
+            <div title="{%= m.metric.description %}">
+              <p class="heading">{%= m.metric.name %}</p>
+              <p class="title">{%= m.value %}</p>
+            </div>
+          </div>
+          {%_ } -%}
+        </div>
+      </div>
+      <!-- Summary > Issues -->
+      <h3 class="title is-6">Issues</h3>
+      <div class="box">
+        <div class="level stats is-mobile">
+          <div class="level-item has-text-centered">
+            <span class="severity {%= result.stats.info > 0 ? '' : 's-none' %} s-info"
+                  title="{%= result.stats.info %} info issue(s)">
+              {%= result.stats.info %}
+            </span>
+          </div>
+          <div class="level-item has-text-centered">
+            <span class="severity {%= result.stats.minor > 0 ? '' : 's-none' %} s-minor"
+                  title="{%= result.stats.minor %} minor issue(s)">
+              {%= result.stats.minor %}
+            </span>
+          </div>
+          <div class="level-item has-text-centered">
+            <span class="severity {%= result.stats.major > 0 ? '' : 's-none' %} s-major"
+                  title="{%= result.stats.major %} major issue(s)">
+              {%= result.stats.major %}
+            </span>
+          </div>
+          <div class="level-item has-text-centered">
+            <span class="severity {%= result.stats.critical > 0 ? '' : 's-none' %} s-critical"
+                  title="{%= result.stats.critical %} critical issue(s)">
+              {%= result.stats.critical %}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+    {%_ } -%}
+    <!-- Scenarios -->
+    {%_ for (const s of result.scenarios) { -%}
+    <hr>
+    <section class="section" data-spy>
+      {%_ if (full) { -%}
+      <h2 id="{%= s.id %}" class="title is-4">
+        {%= s.name %}
+      </h2>
+      <!-- Scenario > Metadata -->
+      <div class="tags">
+        <span class="tag">
+          <span class="tag-label">Time</span>
+          {%= new Date(s.time).toLocaleString() %}
+        </span>
+      </div>
+      <!-- Scenario > Measures -->
+      <h3 class="title is-6" data-collapse="#measures-{%= s.id %}" aria-expanded="false"
+          aria-controls="measures-{%= s.id %}" title="Toggle more measures">
+        Measures
+      </h3>
+      <div class="box measures">
+        <div class="measures-primary level is-flex-wrap-wrap">
+          {%_ for (const m of s.measures.filter(m => 50 > m.metric.order)) { -%}
+          <div class="level-item has-text-centered">
+            <div title="{%= m.metric.description %}">
+              <p class="heading">{%= m.metric.name %}</p>
+              <p class="title {% if (m.hasGrade) { %}grade g-{%= m.gradeLetter %}{% } %}">
+                {%= m.value %}
+              </p>
+            </div>
+          </div>
+          {%_ } -%}
+        </div>
+        <div class="measures-secondary level is-flex-wrap-wrap is-hidden" id="measures-{%= s.id %}">
+          {%_ for (const m of s.measures.filter(m => m.metric.order >= 50)) { -%}
+          <div class="level-item has-text-centered">
+            <div title="{%= m.metric.description %}">
+              <p class="heading">{%= m.metric.name %}</p>
+              <p class="title">{%= m.value %}</p>
+            </div>
+          </div>
+          {%_ } -%}
+        </div>
+      </div>
+      <!-- Scenario > Issues -->
+      <h3 class="title is-6">Issues</h3>
+      <div class="box">
+        <div class="level stats is-mobile">
+          <div class="level-item has-text-centered">
+            <span class="severity {%= s.stats.info > 0 ? '' : 's-none' %} s-info"
+                  title="{%= s.stats.info %} info issue(s)">
+              {%= s.stats.info %}
+            </span>
+          </div>
+          <div class="level-item has-text-centered">
+            <span class="severity {%= s.stats.minor > 0 ? '' : 's-none' %} s-minor"
+                  title="{%= s.stats.minor %} minor issue(s)">
+              {%= s.stats.minor %}
+            </span>
+          </div>
+          <div class="level-item has-text-centered">
+            <span class="severity {%= s.stats.major > 0 ? '' : 's-none' %} s-major"
+                  title="{%= s.stats.major %} major issue(s)">
+              {%= s.stats.major %}
+            </span>
+          </div>
+          <div class="level-item has-text-centered">
+            <span class="severity {%= s.stats.critical > 0 ? '' : 's-none' %} s-critical"
+                  title="{%= s.stats.critical %} critical issue(s)">
+              {%= s.stats.critical %}
+            </span>
+          </div>
+        </div>
+      </div>
+      {%_ } -%}
+      <!-- Pages -->
+      {%_ for (const p of s.pages) { -%}
+      <div class="block" data-spy>
+        <h3 id="{%= p.id %}" class="title is-5 {% if (!full) { -%}is-hidden{% } -%}">
+          {%= p.name || p.title || p.url %}
+        </h3>
+        <!-- Page > Metadata -->
+        <div class="tags">
+          <span class="tag">
+            <span class="tag-label">Title</span>
+            {%= p.title %}
+          </span>
+          <span class="tag">
+            <span class="tag-label">URL</span>
+            <a href="{%= p.url %}">{%= p.url %}</a>
+          </span>
+          <span class="tag">
+            <span class="tag-label">Time</span>
+            {%= new Date(p.time).toLocaleString() %}
+          </span>
+        </div>
+        <!-- Page > Measures -->
+        <h4 class="title is-6" data-collapse="#measures-{%= p.id %}" aria-expanded="false"
+            aria-controls="measures-{%= p.id %}" title="Toggle more measures">
+          Measures
+        </h4>
+        <div class="box measures">
+          <div class="measures-primary level is-flex-wrap-wrap">
+            {%_ for (const m of p.measures.filter(m => 50 > m.metric.order)) { -%}
+            <div class="level-item has-text-centered">
+              <div title="{%= m.metric.description %}">
+                <p class="heading">{%= m.metric.name %}</p>
+                <p class="title {% if (m.hasGrade) { %}grade g-{%= m.gradeLetter %}{% } %}">
+                  {%= m.value %}
+                </p>
+              </div>
+            </div>
+            {%_ } -%}
+          </div>
+          <div class="measures-secondary level is-flex-wrap-wrap is-hidden" id="measures-{%= p.id %}">
+            {%_ for (const m of p.measures.filter(m => m.metric.order >= 50)) { -%}
+            <div class="level-item has-text-centered">
+              <div title="{%= m.metric.description %}">
+                <p class="heading">{%= m.metric.name %}</p>
+                <p class="title">{%= m.value %}</p>
+              </div>
+            </div>
+            {%_ } -%}
+          </div>
+        </div>
+        <!-- Page > Issues -->
+        <h4 class="title is-6" data-collapse="#issues-{%= p.id %}" aria-expanded="{%= !full %}"
+            aria-controls="issues-{%= p.id %}" title="Toggle issues list">
+          Issues
+        </h4>
+        <div class="box">
+          <div class="level stats is-mobile">
+            <div class="level-item has-text-centered">
+              <span class="severity {%= p.stats.info > 0 ? '' : 's-none' %} s-info"
+                    title="{%= p.stats.info %} info issue(s)">
+                {%= p.stats.info %}
+              </span>
+            </div>
+            <div class="level-item has-text-centered">
+              <span class="severity {%= p.stats.minor > 0 ? '' : 's-none' %} s-minor"
+                    title="{%= p.stats.minor %} minor issue(s)">
+                {%= p.stats.minor %}
+              </span>
+            </div>
+            <div class="level-item has-text-centered">
+              <span class="severity {%= p.stats.major > 0 ? '' : 's-none' %} s-major"
+                    title="{%= p.stats.major %} major issue(s)">
+                {%= p.stats.major %}
+              </span>
+            </div>
+            <div class="level-item has-text-centered">
+              <span class="severity {%= p.stats.critical > 0 ? '' : 's-none' %} s-critical"
+                    title="{%= p.stats.critical %} critical issue(s)">
+                {%= p.stats.critical %}
+              </span>
+            </div>
+          </div>
+        </div>
+        <table class="table issues is-striped is-hoverable is-fullwidth {% if (full) { -%}is-hidden{% } -%}"
+               id="issues-{%= p.id %}">
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Issue</th>
+              <th>Element</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%_ for (const i of p.issues) { -%}
+            <tr>
+              <td>
+                <span class="severity s-{%= i.data.severity %}">
+                  {%= i.data.severity %}
+                </span>
+              </td>
+              <td title="{%= i.rule.description %}">
+                {%= i.rule.name %}
+              </td>
+              <td>
+                <code>{%= i.data.element %}</code>
+                <span class="count"
+                      title="{%= i.data.occurrences %} occurrence(s) of this issue">
+                  {%= i.data.occurrences %}
+                </span>
+              </td>
+            </tr>
+            {%_ } -%}
+          </tbody>
+        </table>
+      </div>
+      {%_ } -%}
+    </section>
+    {%_ } -%}
+  </main>
+
+  <script type="module" src="/scripts/main.js"></script>
+</body>
+
+</html>

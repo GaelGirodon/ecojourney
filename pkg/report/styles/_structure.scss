@@ -1,0 +1,56 @@
+//
+// Sidebar title and navigation menu
+//
+
+aside.sidebar {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    background-color: $white-bis;
+    height: 100vh;
+    width: calc((100vw - $layout-width) / 2 + $sidebar-width);
+    padding-left: calc((100vw - $layout-width) / 2);
+    overflow: hidden auto;
+    scrollbar-width: thin;
+
+    @include until($layout-width) {
+        width: $sidebar-width;
+        padding-left: 0;
+    }
+
+    @include until($tablet) {
+        display: none;
+    }
+
+    .sidebar-header {
+        position: sticky;
+        top: 0;
+        background-color: inherit;
+        margin: 0 1rem;
+        padding: 1.5rem 0;
+        border-bottom: solid 1px $grey-lighter;
+    }
+
+    .sidebar-body {
+        padding: 1rem;
+    }
+}
+
+//
+// Main page content
+//
+
+main.main {
+    padding-left: calc((100vw - $layout-width) / 2 + $sidebar-width);
+    padding-right: calc((100vw - $layout-width) / 2);
+
+    @include until($layout-width) {
+        padding-left: $sidebar-width;
+        padding-right: 0;
+    }
+
+    @include until($tablet) {
+        padding: 0;
+        width: 100%;
+    }
+}

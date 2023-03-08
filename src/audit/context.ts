@@ -1,8 +1,8 @@
 import process from "node:process";
 import playwright, { Browser, BrowserContext, BrowserContextOptions, devices, LaunchOptions, Page } from "playwright-core";
 import log from "../util/log.js";
-import { ActionArguments } from "./browsing/action.js";
-import { Scenario } from "./collection/artifact.js";
+import { Scenario } from "./analysis/result.js";
+import { Action, ActionArguments } from "./browsing/action.js";
 import { Config } from "./config.js";
 
 /**
@@ -33,7 +33,9 @@ export class Context {
 
     constructor(
         /** Audit configuration */
-        readonly config: Config
+        readonly config: Config,
+        /** Browsing actions */
+        private readonly actions: Action[]
     ) {
         this.startedAt = new Date();
         this.runId = this.startedAt.getTime();
@@ -51,6 +53,18 @@ export class Context {
      */
     public data(args: ActionArguments = {}) {
         return { env: process.env, args };
+    }
+
+    /**
+     * Get the index of the given action.
+     * @param action The action for which to get the index
+     * @param sameType Get the index within actions with the same type
+     * @returns The action index (from 0)
+     */
+    public actionIndex(action: Action, sameType = false) {
+        return this.actions
+            .filter(a => !sameType || a.constructor.name === action.constructor.name)
+            .indexOf(action);
     }
 
     /*

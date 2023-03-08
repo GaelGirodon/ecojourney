@@ -11,12 +11,11 @@ import { Manifest } from "./manifest.js";
  * @return The loaded manifest
  */
 export async function loadManifest(path: string): Promise<Manifest> {
-    // Website page URL
-    if (isHttpUrl(path)) {
-        return { url: path } as Manifest;
-    }
-    // Load, parse and validate manifest file
-    return await getManifest(path);
+    const manifest = isHttpUrl(path)
+        ? { url: path } as Manifest // From a website page URL
+        : await getManifest(path);  // Load, parse and validate a manifest file
+    manifest.time = new Date();
+    return manifest;
 }
 
 async function getManifest(path: string): Promise<Manifest> {

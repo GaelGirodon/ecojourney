@@ -1,4 +1,4 @@
-import { MetricId, Metric, RuleId, Rule } from "../analysis/analysers/spec.js";
+import { Metric, MetricId, Rule, RuleId } from "../analysis/analysers/spec.js";
 import { WebsiteResult } from "../analysis/result.js";
 import { Config } from "../config.js";
 import { Manifest } from "../manifest/manifest.js";
@@ -28,7 +28,7 @@ export interface ReportData {
 /**
  * Report format
  */
-export type ReportFormat = "json";
+export type ReportFormat = "html" | "json";
 
 /**
  * A report generator

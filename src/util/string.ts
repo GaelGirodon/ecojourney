@@ -23,6 +23,17 @@ export function uncapitalise(str: string) {
 }
 
 /**
+ * Return a copy of the string, in lowercase and with everything
+ * except 0-9 and a-z replaced with -.
+ * @param str The source string
+ * @returns The slug
+ */
+export function slugify(str: string) {
+    return !str ? "" : str.toLowerCase()
+        .replace(/[^\w-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+}
+
+/**
  * Return a copy of the string with trailing dots removed.
  * @param str The source string
  * @returns The uncapitalised string

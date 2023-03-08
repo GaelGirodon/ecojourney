@@ -25,4 +25,7 @@ export interface Manifest {
     /** Browsing actions to simulate */
     actions?: ActionSpec[];
 
+    /** Time at which the manifest was loaded */
+    time: Date;
+
 }

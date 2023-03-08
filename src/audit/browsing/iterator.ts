@@ -12,7 +12,7 @@ export class ActionIterator {
 
     constructor(
         /** Actions to iterate through */
-        private actions: Action[]
+        readonly actions: Action[]
     ) { }
 
     /**

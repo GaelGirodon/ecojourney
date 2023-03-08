@@ -8,4 +8,5 @@ node_modules/
 test/**/output/
 tmp/
 *.tgz
+template.html
 test-results.xml

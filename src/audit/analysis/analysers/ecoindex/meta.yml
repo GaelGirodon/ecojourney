@@ -26,6 +26,7 @@ metrics:
     name: EcoIndex
     description: The EcoIndex
     order: 1
+    unit: integer
     aggregation: avg
     grade: [80, 70, 55, 40, 25, 10]
   greenhouse-gases-emission:

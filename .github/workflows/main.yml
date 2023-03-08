@@ -21,7 +21,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - run: npm ci
+          cache-dependency-path: "**/package-lock.json"
+      - run: npm run ci:all
       - run: npm run lint
       - run: npm run build
       - run: npm pack
@@ -40,7 +41,9 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - run: npm ci
+          cache-dependency-path: "**/package-lock.json"
+      - run: npm run ci:all
+      - run: npm run build:pkg
       - run: npm run test:all:coverage || true
       - uses: gaelgirodon/ci-badges-action@v1
         with:

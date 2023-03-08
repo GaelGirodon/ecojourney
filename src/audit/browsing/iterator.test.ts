@@ -27,7 +27,7 @@ describe("ActionIterator", () => {
             fake(new WaitAction({ selector: ".profile" })),
             fake(new PageAction({ selector: "Profile page" }))
         ]);
-        const ctx = new Context(defaultConfig);
+        const ctx = new Context(defaultConfig, []);
         let i = 0;
         while (iterator.hasNext() && i++ < 10) {
             await iterator.runNext(ctx);

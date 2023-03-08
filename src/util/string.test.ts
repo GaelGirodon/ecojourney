@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { capitalise, trimEndDot, uncapitalise } from "./string.js";
+import { capitalise, slugify, trimEndDot, uncapitalise } from "./string.js";
 
 describe("string", () => {
     describe("#capitalise()", () => {
@@ -12,7 +12,7 @@ describe("string", () => {
             { str: "Capitalise", output: "Capitalise" },
             { str: "CAPITALISE", output: "CAPITALISE" }
         ]) {
-            it(`should return "${t.output}" for string "${t.str}"`, () => {
+            it(`should return '${t.output}' for '${t.str}'`, () => {
                 assert.equal(capitalise(t.str!), t.output);
             });
         }
@@ -28,8 +28,24 @@ describe("string", () => {
             { str: "uncapitalise", output: "uncapitalise" },
             { str: "UNCAPITALISE", output: "uNCAPITALISE" }
         ]) {
-            it(`should return "${t.output}" for string "${t.str}"`, () => {
+            it(`should return '${t.output}' for '${t.str}'`, () => {
                 assert.equal(uncapitalise(t.str!), t.output);
+            });
+        }
+    });
+
+    describe("#slugify()", () => {
+        for (const t of [
+            { str: undefined, output: "" },
+            { str: null, output: "" },
+            { str: "", output: "" },
+            { str: "a-page-name", output: "a-page-name" },
+            { str: "A page name", output: "a-page-name" },
+            { str: "A page name!", output: "a-page-name" },
+            { str: "📄 Page à analyser ?", output: "page-analyser" }
+        ]) {
+            it(`should return '${t.output}' for '${t.str}'`, () => {
+                assert.equal(slugify(t.str!), t.output);
             });
         }
     });
@@ -43,7 +59,7 @@ describe("string", () => {
             { str: "One dot.", output: "One dot" },
             { str: "Multiple dots...", output: "Multiple dots" }
         ]) {
-            it(`should return "${t.output}" for string "${t.str}"`, () => {
+            it(`should return '${t.output}' for '${t.str}'`, () => {
                 assert.equal(trimEndDot(t.str!), t.output);
             });
         }

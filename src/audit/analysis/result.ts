@@ -1,8 +1,8 @@
 import { omit } from "../../util/object.js";
-import { Scenario } from "../collection/artifact.js";
+import { slugify } from "../../util/string.js";
 import { Config } from "../config.js";
 import { Manifest } from "../manifest/manifest.js";
-import { MetricId, Metric, RuleId, Rule } from "./analysers/spec.js";
+import { Metric, MetricId, Rule, RuleId } from "./analysers/spec.js";
 import { Issue, IssueSeverity } from "./issue.js";
 import { aggregateMeasures, Measure } from "./measure.js";
 
@@ -62,6 +62,41 @@ export interface ScenarioResult extends Scenario, AggregatedResult {
 }
 
 /**
+ * A browsing scenario.
+ */
+export class Scenario {
+
+    /** Time at which the scenario was created */
+    readonly time: Date;
+
+    constructor(
+        /** The scenario index */
+        readonly index: number = -1,
+        /** The scenario name */
+        readonly name: string = "",
+        /** Exclude this scenario from analysis */
+        readonly exclude: boolean = false
+    ) {
+        this.time = new Date();
+    }
+
+    /**
+     * The scenario unique identifier
+     */
+    public get id(): string {
+        return slugify(`s${this.index}-${this.name}`);
+    }
+
+    /**
+     * @returns The object to serialize as JSON
+     */
+    public toJSON() {
+        return omit(this, ["exclude"]);
+    }
+
+}
+
+/**
  * A page analysis result with statistics
  */
 export type PageAggregatedResult = PageResult & AggregatedResult;
@@ -71,36 +106,40 @@ export type PageAggregatedResult = PageResult & AggregatedResult;
  */
 export class PageResult {
 
+    /** Time at which the page result was created */
+    readonly time: Date;
+
     constructor(
         /** The browsing scenario */
-        readonly scenario: Scenario,
+        readonly scenario: Scenario = new Scenario(),
+        /** The page index */
+        readonly index: number = -1,
         /** The page name */
-        readonly name: string,
+        readonly name: string = "",
         /** The page URL */
-        readonly url: string,
+        readonly url: string = "",
         /** The page title */
-        readonly title: string,
+        readonly title: string = "",
         /** Page measures */
         readonly measures: Measure[] = [],
         /** Page issues */
         readonly issues: Issue[] = []
-    ) { }
+    ) {
+        this.time = new Date();
+    }
+
+    /**
+     * The page unique identifier
+     */
+    public get id(): string {
+        return slugify(`p${this.index}-${this.name}`);
+    }
 
     /**
      * @returns The object to serialize as JSON
      */
     public toJSON() {
         return omit(this, ["scenario"]);
-    }
-
-    /**
-     * Clone th given page result into a new one.
-     * @param p The page result to clone
-     * @returns The clone
-     */
-    static clone(p: PageResult): PageResult {
-        return new PageResult(p.scenario, p.name, p.url,
-            p.title, p.measures, p.issues);
     }
 
 }
@@ -128,8 +167,8 @@ export function aggregateResults(pages: PageResult[]): WebsiteResult {
         // Compute page statistics
         const pageStats = new IssuesStatistics().addFromIssues(page.issues);
         // Collect page, measures and statistics for the current scenario result
-        scenarioPages.push(Object.assign(PageResult.clone(page), {
-            stats: pageStats
+        scenarioPages.push(Object.assign(new PageResult(), {
+            ...page, stats: pageStats
         }));
         scenarioMeasures.push(...page.measures);
         scenarioStats.add(pageStats);

@@ -85,12 +85,12 @@
           "title": "Formats",
           "description": "Output report formats",
           "type": "array",
-          "example": [ "json" ],
+          "example": [ "html" ],
           "items": {
             "title": "Items",
             "description": "Output report format",
             "type": "string",
-            "enum": [ "json" ]
+            "enum": [ "html", "json" ]
           }
         },
         "proxy": {

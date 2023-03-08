@@ -1,12 +1,12 @@
 import { readdir, readFile } from "node:fs/promises";
 import { parse } from "yaml";
 import log from "../../util/log.js";
-import { PageArtifact, Scenario } from "../collection/artifact.js";
+import { PageArtifact } from "../collection/artifact.js";
 import { PageAnalyser } from "./analysers/analyser.js";
 import { Metric, MetricId, PageAnalyserSpec, Rule, RuleId } from "./analysers/spec.js";
 import { Issue } from "./issue.js";
 import { Measure } from "./measure.js";
-import { PageResult } from "./result.js";
+import { PageResult, Scenario } from "./result.js";
 
 /**
  * The core analyser
@@ -29,23 +29,20 @@ export class Analyser {
      * @returns Page analysis result (or undefined if this page must be ignored)
      */
     async analyse(page: PageArtifact, scenario: Scenario) {
-        const result = new PageResult(scenario, page.name,
+        const result = new PageResult(scenario, page.index, page.name,
             page.frame.url(), await page.frame.title());
         log.info("Analyse page '%s' (%s)", result.title, result.url);
         for (const pa of this.analysers) {
             log.debug("Run page analyser %s (%s)", pa.metadata.name, pa.metadata.id);
             const paResult = await pa.analyse(page);
-            if (paResult.measures) {
-                for (const [id, measure] of Object.entries(paResult.measures)) {
-                    result.measures.push(new Measure(this.metrics.get(id)!, measure));
-                }
+            for (const [id, measure] of Object.entries(paResult.measures || {})) {
+                result.measures.push(new Measure(this.metrics.get(id)!, measure));
             }
-            if (paResult.issues) {
-                for (const issue of paResult.issues) {
-                    result.issues.push(new Issue(this.rules.get(issue.id)!, issue));
-                }
+            for (const issue of paResult.issues || []) {
+                result.issues.push(new Issue(this.rules.get(issue.id)!, issue));
             }
         }
+        result.measures.sort(Measure.compare);
         log.info("Page analysed: %d measures, %d issues",
             result.measures.length, result.issues.length);
         return result;
