@@ -1,0 +1,26 @@
+<% for (const analyser of analysers) { -%>
+### <%- analyser.name %> (`<%- analyser.id %>`)
+
+<%- analyser.description %>
+<% if (analyser.metrics) { -%>
+
+#### Metrics
+
+| Id   | Name | Description |
+| ---- | ---- | ----------- |
+<% for (const [id, m] of Object.entries(analyser.metrics).sort(([id1, m1], [id2, m2]) => m1.order - m2.order)) { -%>
+| `<%- m.id %>` | <%- m.name %> | <%- m.description %> |
+<% } -%>
+<% } -%>
+<% if (analyser.rules) { -%>
+
+#### Rules
+
+| Id   | Name | Description |
+| ---- | ---- | ----------- |
+<% for (const [id, r] of Object.entries(analyser.rules)) { -%>
+| `<%- r.id %>` | <%- r.name %> | <%- r.description %> |
+<% } -%>
+<% } -%>
+
+<% } -%>

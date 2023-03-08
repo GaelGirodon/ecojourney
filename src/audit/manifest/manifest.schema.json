@@ -1,0 +1,560 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "manifest.schema.json",
+  "title": "Audit manifest",
+  "description": "The manifest file allows to describe the audit scenario and configuration.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "title": "Name",
+      "description": "Name of the web application",
+      "type": "string",
+      "example": "My website"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Description of the web application or of the current test",
+      "type": "string",
+      "example": "A website that must comply with eco-design best practices"
+    },
+    "url": {
+      "title": "URL",
+      "description": "Main/root URL of the web application",
+      "type": "string",
+      "example": "https://mywebsite.net"
+    },
+    "config": {
+      "title": "Configuration",
+      "description": "Audit configuration (merged with CLI flags and environment variables)",
+      "type": "object",
+      "properties": {
+        "browser": {
+          "title": "Browser",
+          "description": "Browser to run the audit with",
+          "type": "string",
+          "enum": [ "msedge", "chrome", "chromium", "firefox", "webkit" ],
+          "example": "chromium"
+        },
+        "headless": {
+          "title": "Headless",
+          "description": "Run browser in headless mode",
+          "type": "boolean",
+          "example": true
+        },
+        "device": {
+          "title": "Device",
+          "description": "Simulate browser behavior for a specific device",
+          "type": "string",
+          "example": "Galaxy S8"
+        },
+        "headers": {
+          "title": "Headers",
+          "description": "Additional HTTP headers to be sent with every request",
+          "type": "object",
+          "example": {"X-User": "user"},
+          "patternProperties": {
+            "^[A-Za-z0-9_-]+$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "timeout": {
+          "title": "Timeout",
+          "description": "Maximum time to wait for navigations or actions, in milliseconds",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 600000,
+          "example": 10000
+        },
+        "retries": {
+          "title": "Retries",
+          "description": "Number of retries in case of failure",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "example": 3
+        },
+        "output": {
+          "title": "Output",
+          "description": "Directory to write reports to",
+          "type": "string",
+          "example": "./reports/"
+        },
+        "formats": {
+          "title": "Formats",
+          "description": "Output report formats",
+          "type": "array",
+          "example": ["json"],
+          "items": {
+            "title": "Items",
+            "description": "Output report format",
+            "type": "string",
+            "enum": [ "json" ]
+          }
+        },
+        "proxy": {
+          "title": "Proxy",
+          "description": "Network proxy settings",
+          "type": "object",
+          "properties": {
+            "server": {
+              "title": "Server",
+              "description": "Proxy to be used for all requests",
+              "type": "string",
+              "example": "http://myproxy.com:3128"
+            },
+            "bypass": {
+              "title": "Bypass",
+              "description": "Comma-separated domains to bypass proxy",
+              "type": "string",
+              "example": ".com, chromium.org, .domain.com"
+            },
+            "username": {
+              "title": "Username",
+              "description": "Username to use if HTTP proxy requires authentication",
+              "type": "string",
+              "example": "username"
+            },
+            "password": {
+              "title": "Password",
+              "description": "Password to use if HTTP proxy requires authentication",
+              "type": "string",
+              "example": "password"
+            }
+          },
+          "requiredProperties": [ "server" ],
+          "additionalProperties": false
+        },
+        "dryRun": {
+          "title": "DryRun",
+          "description": "Simulate the audit without actually running the browser",
+          "type": "boolean",
+          "example": true
+        },
+        "verbose": {
+          "title": "Verbose",
+          "description": "Enable verbose output",
+          "type": "boolean",
+          "example": true
+        }
+      },
+      "minProperties": 0,
+      "additionalProperties": false
+    },
+    "procedures": {
+      "title": "Procedures",
+      "description": "Procedures allow to define reusable sequences of actions.",
+      "type": "object",
+      "patternProperties": {
+        "^[A-Za-z0-9_-]+$": {
+          "$ref": "#/properties/actions"
+        }
+      },
+      "additionalProperties": false
+    },
+    "actions": {
+      "title": "Actions",
+      "description": "Actions allow to define the browsing scenario to run and audit.",
+      "type": "array",
+      "items": {
+        "description": "A browsing action",
+        "type": "object",
+        "properties": {
+          "description": {
+            "description": "Action description",
+            "type": "string"
+          },
+          "check": {
+            "title": "Check or uncheck a checkbox or a radio button.",
+            "oneOf": [
+              {
+                "description": "The selector to use when resolving the DOM element and the state to set (`check` or `uncheck`, default to `check`)",
+                "type": "string",
+                "pattern": "^.+(, *(un)?check)?$",
+                "example": "input[name='remember'], check"
+
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "selector": {
+                    "title": "Selector",
+                    "description": "The selector to use when resolving the DOM element",
+                    "type": "string",
+                    "example": "input[name='remember']"
+                  },
+                  "state": {
+                    "title": "State",
+                    "description": "The state to set (`check` or `uncheck`, default to `check`)",
+                    "type": "string",
+                    "enum": [ "check", "uncheck" ],
+                    "example": "check"
+                  }
+                },
+                "required": [ "selector" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "click": {
+            "title": "Click on an element.",
+            "oneOf": [
+              {
+                "description": "The selector to use when resolving the DOM element",
+                "type": "string",
+                "example": "button[type='submit']"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "selector": {
+                    "title": "Selector",
+                    "description": "The selector to use when resolving the DOM element",
+                    "type": "string",
+                    "example": "button[type='submit']"
+                  }
+                },
+                "required": [ "selector" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "fill": {
+            "title": "Fill an input or a textarea with a text.",
+            "oneOf": [
+              {
+                "description": "The selector to use when resolving the DOM element and the value to set (supports templating)",
+                "type": "string",
+                "pattern": "^.+,.+$",
+                "example": "#search, Eco-design"
+
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "selector": {
+                    "title": "Selector",
+                    "description": "The selector to use when resolving the DOM element",
+                    "type": "string",
+                    "example": "#search"
+                  },
+                  "value": {
+                    "title": "Value",
+                    "description": "The value to set (supports templating)",
+                    "type": "string",
+                    "example": "Eco-design"
+                  }
+                },
+                "required": [ "selector", "value" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "goto": {
+            "title": "Navigate to the given URL.",
+            "oneOf": [
+              {
+                "description": "The target HTTP/HTTPS URL",
+                "type": "string",
+                "format": "uri",
+                "example": "https://mywebsite.net/admin"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "title": "Url",
+                    "description": "The target HTTP/HTTPS URL",
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://mywebsite.net/admin"
+                  }
+                },
+                "required": [ "url" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "page": {
+            "title": "Mark the current state as a stable page to analyse.",
+            "oneOf": [
+              {
+                "description": "The page name",
+                "type": "string",
+                "example": "Profile page"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "title": "Name",
+                    "description": "The page name",
+                    "type": "string",
+                    "example": "Profile page"
+                  }
+                },
+                "required": [ "name" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "procedure": {
+            "title": "Execute actions from a procedure.",
+            "oneOf": [
+              {
+                "description": "The procedure name",
+                "type": "string",
+                "example": "login"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "title": "Name",
+                    "description": "The procedure name",
+                    "type": "string",
+                    "example": "login"
+                  },
+                  "args": {
+                    "title": "Args",
+                    "description": "Procedure arguments",
+                    "type": "object",
+                    "example": {
+                      "username": "admin"
+                    },
+                    "patternProperties": {
+                      "^\\w+$": {
+                        "title": "+$",
+                        "description": "A procedure argument",
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [ "name" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "scenario": {
+            "title": "Start a scenario (allows to group page audit results).",
+            "oneOf": [
+              {
+                "description": "The scenario name",
+                "type": "string",
+                "example": "Browse my profile"
+              },
+              {
+                "description": "Scenario properties",
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "title": "Name",
+                    "description": "The scenario name",
+                    "type": "string",
+                    "example": "Browse my profile"
+                  },
+                  "newContext": {
+                    "title": "NewContext",
+                    "description": "Close the current context and create a new one",
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "exclude": {
+                    "title": "Exclude",
+                    "description": "Exclude this scenario from analysis (only run actions)",
+                    "type": "boolean",
+                    "example": false
+                  }
+                },
+                "required": [ "name" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "screenshot": {
+            "title": "Take a screenshot of the current page.",
+            "oneOf": [
+              {
+                "description": "The file path to save the image to",
+                "type": "string",
+                "example": "posts.png"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "title": "Path",
+                    "description": "The file path to save the image to",
+                    "type": "string",
+                    "example": "posts.png"
+                  }
+                },
+                "required": [ "path" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "scroll": {
+            "title": "Scroll an element into view.",
+            "oneOf": [
+              {
+                "description": "The selector to use when resolving the DOM element",
+                "type": "string",
+                "example": "#footer"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "selector": {
+                    "title": "Selector",
+                    "description": "The selector to use when resolving the DOM element",
+                    "type": "string",
+                    "example": "#footer"
+                  }
+                },
+                "required": [ "selector" ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "select": {
+            "title": "Select option or options in select.",
+            "oneOf": [
+              {
+                "description": "The selector to use when resolving the DOM element and option(s) to select",
+                "type": "string",
+                "pattern": "^(.+(,|$)){2,}",
+                "example": "select[name='lang'], fr"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "selector": {
+                    "title": "Selector",
+                    "description": "The selector to use when resolving the DOM element",
+                    "type": "string",
+                    "example": "select[name='lang']"
+                  },
+                  "value": {
+                    "title": "Value",
+                    "description": "The option to select",
+                    "type": "string",
+                    "example": "fr"
+                  },
+                  "values": {
+                    "title": "Values",
+                    "description": "Options to select",
+                    "type": "array",
+                    "example": ["fr", "en"],
+                    "items": {
+                      "title": "Value",
+                      "description": "The option to select",
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [ "selector" ],
+                "minProperties": 2,
+                "additionalProperties": false
+              }
+            ]
+          },
+          "upload": {
+            "title": "Select input files for upload.",
+            "oneOf": [
+              {
+                "description": "The selector to use when resolving the DOM element and input file(s) to set",
+                "type": "string",
+                "pattern": "^(.+(, *|$)){2,}",
+                "example": "input[name='file'], myfile.txt"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "selector": {
+                    "title": "Selector",
+                    "description": "The selector to use when resolving the DOM element",
+                    "type": "string",
+                    "example": "select[name='lang']"
+                  },
+                  "file": {
+                    "title": "File",
+                    "description": "The input file to set",
+                    "type": "string",
+                    "example": "myfile.txt"
+                  },
+                  "files": {
+                    "title": "Files",
+                    "description": "Input files to set",
+                    "type": "array",
+                    "example": ["myfile1.txt", "myfile2.txt"],
+                    "items": {
+                      "title": "File",
+                      "description": "The input file to set",
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [ "selector" ],
+                "minProperties": 2,
+                "additionalProperties": false
+              }
+            ]
+          },
+          "wait": {
+            "title": "Wait for the required load state to be reached or for an element to be visible.",
+            "oneOf": [
+              {
+                "description": "The load state to wait for",
+                "type": "string",
+                "enum": [ "load", "domcontentloaded", "networkidle" ],
+                "example": "load"
+              },
+              {
+                "description": "The selector to use when resolving the DOM element",
+                "type": "string",
+                "not": {
+                  "enum": [ "load", "domcontentloaded", "networkidle" ]
+                },
+                "example": "main#container"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "title": "State",
+                    "description": "The load state to wait for",
+                    "type": "string",
+                    "enum": [ "load", "domcontentloaded", "networkidle" ],
+                    "example": "load"
+                  },
+                  "selector": {
+                    "title": "Selector",
+                    "description": "The selector to use when resolving the DOM element",
+                    "type": "string",
+                    "example": "main#container"
+                  }
+                },
+                "minProperties": 1,
+                "maxProperties": 1,
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "minProperties": 1,
+        "maxProperties": 1,
+        "dependentSchemas": {
+          "description": { },
+          "maxProperties": 2
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [ "url" ],
+  "additionalProperties": false
+}

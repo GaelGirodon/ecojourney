@@ -1,0 +1,48 @@
+```shell
+<%- program.name() %> <%- program.usage() %>
+```
+
+**Global options**
+
+| Flags | Description | Environment variable |
+| ----- | ----------- | -------------------- |
+<% for (const o of program.options) { -%>
+| `<%- o.flags %>` | <%- cap(o.description) %> | <% if (o.envVar) { %>`<%- o.envVar %>` <% } %>|
+<% } -%>
+| `<%- program._helpFlags %>` | <%- cap(program._helpDescription) %> | |
+
+**Commands**
+
+| Name | Usage | Description |
+| ---- | ----- | ----------- |
+<% for (const c of program.commands) { -%>
+| [`<%- c.name() %>`](#<%- c.name() %>) | `<%- c.usage() %>` | <%- cap(c.summary()) %> |
+<% } -%>
+
+<% for (const command of program.commands) { -%>
+#### `<%- command.name() %>`
+
+<%- command.description() %>.
+
+```shell
+<%- program.name() %> <%- command.name() %> <%- command.usage() %>
+```
+
+**Arguments**
+
+| Name | Description | Required |
+| ---- | ----------- | :------: |
+<% for (const a of command._args) { -%>
+| `<%- a.name() %>` | <%- cap(a.description) %> | <%- a.required ? "☑️" : "🔲" %> |
+<% } -%>
+
+**Options**
+
+| Flags | Description | Default | Environment variable |
+| ----- | ----------- | ------- | -------------------- |
+<% for (const o of command.options) { -%>
+| `<%- o.flags %>` | <%- cap(o.description) %> | <% if (o.attributeName() in defaultConfig) { %>`<%- defaultConfig[o.attributeName()] %>` <% } %>| <% if (o.envVar) { %>`<%- o.envVar %>` <% } %>|
+<% } -%>
+| `<%- command._helpFlags %>` | <%- cap(command._helpDescription) %> | | |
+
+<% } -%>

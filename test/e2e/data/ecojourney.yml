@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../src/audit/manifest/manifest.schema.json
+name: Sample website
+description: A sample website for E2E testing
+url: http://localhost:3000
+
+procedures:
+  # Log a user in using the login form page
+  login:
+    - goto: http://localhost:3000/login
+    - page: "Login page for {{ args.username }}"
+    - fill: { selector: "input[name=username]", value: "{{ args.username }}" }
+    - fill: { selector: "input[name=password]", value: "{{ args.password }}" }
+    - select: { selector: "select[name=type]", value: "local" }
+    - check: input[name=remember]
+    - click: a#submit
+
+actions:
+  # User scenario
+  - scenario: User scenario
+  - goto: http://localhost:3000
+  - page: Home page
+  - procedure:
+      name: login
+      args: { username: user, password: "{{ env.USER_PASSWORD }}" }
+  - goto: http://localhost:3000/profile
+  - wait: main.profile
+  - page: Profile page
+  - screenshot: profile-page.png
+
+  # Admin scenario
+  - scenario: { name: Admin scenario, newContext: true }
+  - goto: http://localhost:3000
+  - page: Home page
+  - procedure:
+      name: login
+      args: { username: admin, password: "{{ env.ADMIN_PASSWORD }}" }
+  - goto: http://localhost:3000/admin
+  - wait: main.admin
+  - page: Admin page
+  - screenshot: admin-page.png

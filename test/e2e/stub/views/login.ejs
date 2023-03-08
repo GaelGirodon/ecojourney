@@ -1,0 +1,22 @@
+<%- include("header"); -%>
+
+<h1>Login</h1>
+
+<form>
+    <input type="text" name="username" placeholder="Username" aria-label="Username" required>
+    <input type="password" name="password" placeholder="Password" aria-label="Password" required>
+    <select name="type" aria-label="Authentication type" required>
+        <option selected disabled>Select an authentication type...</option>
+        <option value="local">Local</option>
+        <option value="social">Social</option>
+    </select>
+    <fieldset>
+        <label for="remember">
+            <input type="checkbox" id="remember" name="remember">
+            Remember me
+        </label>
+    </fieldset>
+    <a id="submit" href="/" role="button">Login</a>
+</form>
+
+<%- include("footer"); -%>

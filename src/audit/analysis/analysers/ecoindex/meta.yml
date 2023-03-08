@@ -1,0 +1,44 @@
+id: ecoindex
+name: EcoIndex
+description: EcoIndex and related metrics calculation
+metrics:
+  requests-count:
+    id: requests-count
+    name: Requests count
+    description: The number of requests
+    order: 10
+    aggregation: sum
+  responses-size:
+    id: responses-size
+    name: Responses size
+    description: The responses total size
+    order: 11
+    unit: byte
+    aggregation: sum
+  dom-elements-count:
+    id: dom-elements-count
+    name: DOM elements count
+    description: The number of DOM elements
+    order: 12
+    aggregation: sum
+  eco-index:
+    id: eco-index
+    name: EcoIndex
+    description: The EcoIndex
+    order: 1
+    aggregation: avg
+    grade: [80, 70, 55, 40, 25, 10]
+  greenhouse-gases-emission:
+    id: greenhouse-gases-emission
+    name: 🌫️ Greenhouse gases emission
+    description: The greenhouse gases emission
+    order: 2
+    unit: "gCO2e"
+    aggregation: sum
+  water-consumption:
+    id: water-consumption
+    name: 💧 Water consumption
+    description: The water consumption
+    order: 3
+    unit: "cl"
+    aggregation: sum

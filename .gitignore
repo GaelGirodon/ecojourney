@@ -1,0 +1,12 @@
+# .gitignore
+
+.idea/
+.vscode/
+coverage/
+dist/
+node_modules/
+pkg/
+test/e2e/output/
+tmp/
+*.tgz
+test-results.xml

@@ -1,0 +1,168 @@
+<%- manifest.description %>
+
+It can be easily and interactively initialised using the [`init`](#init) command.
+
+#### Example
+
+```yaml
+# Audited website description
+<% for (const [k, v] of Object.entries(manifest.properties).filter(p => p[1].type === "string")) { -%>
+<%- k %>: <%- v.example %>
+<% } -%>
+
+# <%- trimEndDot(manifest.properties.config.description) %>
+config: ...
+
+# <%- trimEndDot(manifest.properties.procedures.description) %>
+procedures: ...
+
+# <%- trimEndDot(manifest.properties.actions.description) %>
+actions:
+  # <%- trimEndDot(manifest.properties.actions.items.properties.scenario.title) %>
+  - scenario: Browse blog posts
+  # Navigate to the posts index page
+  - goto: <%- manifest.properties.url.example %>/posts
+  - wait: main.posts
+  # Analyse the current page (including the previous navigation actions)
+  - page: Posts index
+  # <%- trimEndDot(manifest.properties.actions.items.properties.screenshot.title) %>
+  - screenshot: posts-index.png
+  # Navigate to and audit the post page
+  - click: article.post
+  - wait: main.post
+  - page: Post
+  - screenshot: posts-single.png
+```
+
+#### Interpolation
+
+Most properties support injecting environment variables (and procedure arguments)
+using the double curly braces `{{` and `}}` as delimiters. This is particularly
+useful to avoid committing sensitive values such as user passwords.
+
+**Example:**
+
+```yaml
+# Fill a password input using a value set from an environment variable
+- fill: { selector: "#password", value: "{{ env.PASSWORD }}" }
+```
+
+#### Metadata
+
+```yaml
+<% for (const [k, v] of Object.entries(manifest.properties).filter(p => p[1].type === "string")) { -%>
+<%- k %>: <%- v.example %>
+<% } -%>
+```
+
+| Name | Description | Required |
+| ---- | ----------- | -------- |
+<% for (const [k, v] of Object.entries(manifest.properties).filter(p => p[1].type === "string")) { -%>
+| `<%- k %>` | <%- v.description %> | <%- manifest.required.includes(k) ? "☑️" : "🔲" %> |
+<% } -%>
+
+#### Configuration
+
+<% const config = manifest.properties.config -%>
+<%- config.description %>
+
+```yaml
+config:
+<% for (const [k, v] of Object.entries(config.properties)) { -%>
+  <%- k %>: <%- JSON.stringify(v.example) %>
+<% if (v.type === "object" && v.properties) { -%>
+<% for (const [sk, sv] of Object.entries(v.properties)) { -%>
+    <%- sk %>: <%- JSON.stringify(sv.example) %>
+<% } -%>
+<% } -%>
+<% } -%>
+```
+
+| Name | Description | Type | Default | Values |
+| ---- | ----------- | ---- | ------- | ------ |
+<% for (const [k, v] of Object.entries(config.properties)) { -%>
+| `<%- k %>` | <%- v.description %> | `<%- v.type %>` | <% if (k in defaultConfig) { %>`<%- defaultConfig[k] %>` <% } %> | <%- (v.items?.enum ?? v.enum ?? []).map(e => `\`${e}\``).join(", ") %> |
+<% if (v.type === "object" && v.properties) { -%>
+<% for (const [sk, sv] of Object.entries(v.properties)) { -%>
+| ∟ `<%- sk %>` | <%- sv.description %> | `<%- sv.type %>` | <%- (sv.items?.enum ?? sv.enum ?? []).map(e => `\`${e}\``).join(", ") %> |
+<% } -%>
+<% } -%>
+<% } -%>
+
+#### Actions
+
+<% const actions = manifest.properties.actions -%>
+<%- actions.description %>
+
+```yaml
+actions:
+  # Abbreviated syntax
+  - <name>: <value1>, <value2>
+    description: optional action description
+  # Explicit syntax
+  - <name>:
+      <property1>: <value1>
+      <property2>: <value2>
+```
+
+<% for (const [action, value] of Object.entries(actions.items.properties).filter(p => p[0] !== "description")) { -%>
+##### `<%- action %>`
+
+<%- value.title %>
+
+**Abbreviated syntax**
+
+<% for (const prop of value.oneOf.slice(0, -1)) { -%>
+_Argument:_ <%- uncap(prop.description) -%>
+<% if (prop.enum) { %> (<%- prop.enum.map(e => `\`${e}\``).join(", ") %>)<% } %>
+
+```yaml
+- <%- action %>: <%- JSON.stringify(prop.example) %>
+```
+
+<% } -%>
+**Explicit syntax**
+
+<% const longSyntax = value.oneOf.slice(-1)[0] -%>
+```yaml
+- <%- action %>:
+<% for (const [k, prop] of Object.entries(longSyntax.properties)) { -%>
+    <%- k %>: <%- JSON.stringify(prop.example) %>
+<% } -%>
+```
+
+| Property | Type | Description | Required |
+| -------- | ---- | ----------- | -------- |
+<% for (const [k, prop] of Object.entries(longSyntax.properties)) { -%>
+| `<%- k %>` | `<%- prop.type %>` | <%- prop.description -%> | <% -%>
+<%- longSyntax.required?.includes(k) ? "☑️" : (longSyntax.minProperties > 0 ? "🔘" : "🔲") %> |
+<% } -%>
+
+<% } -%>
+#### Procedures
+
+<% const procedures = manifest.properties.procedures -%>
+<%- procedures.description %>
+
+Define a procedure with a unique name under the `procedures` key:
+
+```yaml
+procedures:
+  # Log a user in using the login form page
+  login:
+    - page: "Login page for {{ args.username }}"
+    - fill: { selector: "#username", value: "{{ args.username }}" }
+    - fill: { selector: "#password", value: "{{ args.password }}" }
+    - click: button[type="submit"]
+```
+
+Call it from the browsing scenario using the [`procedure`](#procedure) action:
+
+```yaml
+actions:
+  - ...
+  - procedure:
+      name: login
+      args: { username: user, password: "{{ env.USER_PASSWORD }}" }
+  - ...
+```

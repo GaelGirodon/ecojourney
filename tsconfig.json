@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ESNext",
+    /* Modules */
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    /* Emit */
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    /* Type Checking */
+    "strict": true,
+    "noImplicitThis": false,
+    /* Completeness */
+    "skipLibCheck": true
+  },
+  "exclude": [ "node_modules" ]
+}

@@ -1,0 +1,85 @@
+<% if (schema) { -%>
+# yaml-language-server: $schema=<%= schemaUrl %>
+<% } -%>
+<% if (name) { -%>
+name: <%= name %>
+<% } -%>
+<% if (description) { -%>
+description: <%= description %>
+<% } -%>
+url: <%= url %>
+<% if (proxy) { -%>
+
+config:
+  proxy:
+<% if (proxy === "env") { -%>
+    server: "{{ env.HTTP_PROXY }}"
+    bypass: "{{ env.NO_PROXY }}"
+<% } else { -%>
+    server: <%= proxyServer %>
+<% } -%>
+<% if (proxyAuth) { -%>
+    username: "{{ env.PROXY_USERNAME }}"
+    password: "{{ env.PROXY_PASSWORD }}"
+<% } -%>
+<% } -%>
+<% if (template === "advanced") { -%>
+
+procedures:
+  # Log a user in using the login form page
+  login:
+    - page: "Login page for {{ args.username }}"
+    - fill: { selector: "#username", value: "{{ args.username }}" }
+    - fill: { selector: "#password", value: "{{ args.password }}" }
+    - click: button[type="submit"]
+<% } -%>
+<% if (template !== "basic") { -%>
+
+actions:
+<% if (template === "simple" || template === "intermediate") { -%>
+  # Login and browse my profile
+  - scenario: Login and browse my profile
+  - goto: <%= `${url}/profile` %>
+  - page: Login page
+  - fill: { selector: "#username", value: "{{ env.USERNAME }}" }
+  - fill: { selector: "#password", value: "{{ env.PASSWORD }}" }
+  - click: button[type="submit"]
+  - wait: main.home
+  - page: Home page
+  - screenshot: home-page.png
+  - click: .nav .nav-item.profile
+  - wait: main.profile
+  - page: Profile page
+  - screenshot: profile-page.png
+<% } -%>
+<% if (template === "intermediate") { -%>
+
+  # Browse my posts
+  - scenario: Browse my posts
+  - click: .nav .nav-item.posts
+  - wait: main.posts
+  - page: Posts page
+  - screenshot: posts-page.png
+<% } -%>
+<% if (template === "advanced") { -%>
+  # User scenario
+  - scenario: User scenario
+  - goto: <%= `${url}/profile` %>
+  - procedure:
+      name: login
+      args: { username: user, password: "{{ env.USER_PASSWORD }}" }
+  - wait: main.profile
+  - page: Profile page
+  - screenshot: profile-page.png
+
+  # Admin scenario
+  - scenario: { name: Admin scenario, newContext: true }
+  - goto: <%= `${url}/admin` %>
+  - procedure:
+      name: login
+      args: { username: admin, password: "{{ env.ADMIN_PASSWORD }}" }
+  - wait: main.admin
+  - page: Admin page
+  - screenshot: admin-page.png
+<% } -%>
+<% } -%>
