@@ -1,7 +1,6 @@
 import process from "node:process";
 import playwright, { Browser, BrowserContext, BrowserContextOptions, devices, LaunchOptions, Page } from "playwright-core";
 import log from "../util/log.js";
-import { render } from "./browsing/template.js";
 import { Scenario } from "./collection/artifact.js";
 import { Config } from "./config.js";
 
@@ -11,10 +10,13 @@ import { Config } from "./config.js";
 export class Context {
 
     /** Unique identifier for the current run */
-    private readonly runId: number;
+    readonly runId: number;
 
     /** Date/time at which the audit was started */
-    private readonly startedAt: Date;
+    readonly startedAt: Date;
+
+    /** Current scenario */
+    scenario: Scenario;
 
     /** Browser */
     private browser?: Browser;
@@ -31,33 +33,19 @@ export class Context {
     /** Handler called when a new page is created */
     newPageHandler?: (page: Page) => Promise<void>;
 
-    /** Current scenario */
-    scenario = new Scenario();
-
     constructor(
         /** Audit configuration */
         readonly config: Config
     ) {
         this.startedAt = new Date();
         this.runId = this.startedAt.getTime();
+        this.scenario = new Scenario();
         this.data = {};
     }
 
     /*
      * Getters & mutators
      */
-
-    /**
-     * Get information about the current state of the context.
-     * @returns Information about the current state of the context
-     */
-    public state() {
-        return {
-            runId: this.runId,
-            url: this._page?.url() ?? "",
-            scenario: this.scenario
-        }
-    }
 
     /**
      * Get data that can be injected in action properties.

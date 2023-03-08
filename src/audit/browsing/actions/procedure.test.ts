@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { ProcedureAction } from "./procedure.js";
 
 describe("ProcedureAction", () => {
@@ -9,8 +9,8 @@ describe("ProcedureAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new ProcedureAction("", t.props);
-                assert.strictEqual(action.name, t.name);
-                assert.deepStrictEqual(action.args, t.args);
+                assert.equal(action.name, t.name);
+                assert.deepEqual(action.args, t.args);
             });
         }
     });

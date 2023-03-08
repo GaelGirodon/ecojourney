@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { isHttpUrl } from "./validation.js";
 
 describe("validation", () => {
@@ -10,7 +10,7 @@ describe("validation", () => {
             { value: "https://valid", valid: true }
         ]) {
             it(`should consider ${t.value} as ${t.valid ? "" : "in"}valid`, () => {
-                assert.strictEqual(isHttpUrl(t.value), t.valid);
+                assert.equal(isHttpUrl(t.value), t.valid);
             });
         }
     });

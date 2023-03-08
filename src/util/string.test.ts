@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { capitalise, trimEndDot, uncapitalise } from "./string.js";
 
 describe("string", () => {
@@ -13,7 +13,7 @@ describe("string", () => {
             { str: "CAPITALISE", output: "CAPITALISE" }
         ]) {
             it(`should return "${t.output}" for string "${t.str}"`, () => {
-                assert.strictEqual(capitalise(t.str!), t.output);
+                assert.equal(capitalise(t.str!), t.output);
             });
         }
     });
@@ -29,7 +29,7 @@ describe("string", () => {
             { str: "UNCAPITALISE", output: "uNCAPITALISE" }
         ]) {
             it(`should return "${t.output}" for string "${t.str}"`, () => {
-                assert.strictEqual(uncapitalise(t.str!), t.output);
+                assert.equal(uncapitalise(t.str!), t.output);
             });
         }
     });
@@ -44,7 +44,7 @@ describe("string", () => {
             { str: "Multiple dots...", output: "Multiple dots" }
         ]) {
             it(`should return "${t.output}" for string "${t.str}"`, () => {
-                assert.strictEqual(trimEndDot(t.str!), t.output);
+                assert.equal(trimEndDot(t.str!), t.output);
             });
         }
     });

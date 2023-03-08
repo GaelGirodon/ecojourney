@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { render, renderObject } from "./template.js";
 
 describe("template", () => {
@@ -16,14 +16,14 @@ describe("template", () => {
             { value: "user: {{ args.username }}", output: "user: admin" }
         ]) {
             it(`should render "${t.value}" as "${t.output}"`, () => {
-                assert.strictEqual(render(t.value, data), t.output);
+                assert.equal(render(t.value, data), t.output);
             });
         }
     });
 
     describe("#renderMap()", () => {
         it("should render all object values", () => {
-            assert.deepStrictEqual(renderObject({
+            assert.deepEqual(renderObject({
                 proxy: "{{ env.HTTP_PROXY }}",
                 constant: "CONSTANT",
                 user: "{{ args.username }}"
@@ -35,7 +35,7 @@ describe("template", () => {
         });
 
         it("should render all object values, recursively", () => {
-            assert.deepStrictEqual(renderObject({
+            assert.deepEqual(renderObject({
                 proxy: "{{ env.HTTP_PROXY }}",
                 constant: "CONSTANT",
                 user: "{{ args.username }}",

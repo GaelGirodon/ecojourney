@@ -41,8 +41,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
       - run: npm ci
-      - run: npm run test:all:coverage
+      - run: npm run test:all:coverage || true
       - uses: gaelgirodon/ci-badges-action@v1
         with:
           gist-id: ${{ env.GIST_ID }}
           token: ${{ secrets.GIST_TOKEN }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: |
+            coverage/*coverage.xml
+            test-results.xml

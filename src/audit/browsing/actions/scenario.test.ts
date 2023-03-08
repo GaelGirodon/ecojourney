@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { ScenarioAction } from "./scenario.js";
 
 describe("ScenarioAction", () => {
@@ -13,9 +13,9 @@ describe("ScenarioAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new ScenarioAction("", t.props);
-                assert.strictEqual(action.name, t.name);
-                assert.strictEqual(action.newContext, t.newContext);
-                assert.strictEqual(action.exclude, t.exclude);
+                assert.equal(action.name, t.name);
+                assert.equal(action.newContext, t.newContext);
+                assert.equal(action.exclude, t.exclude);
             });
         }
     });

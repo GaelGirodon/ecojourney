@@ -1,6 +1,9 @@
 <%- manifest.description %>
 
-It can be easily and interactively initialised using the [`init`](#init) command.
+It can be easily and interactively initialised using the [`init`](#init)
+command. A [JSON schema](./src/audit/manifest/manifest.schema.json) is also
+provided to enable code completion and validation in your IDE (using built-in
+JSON schema support for YAML files or via an extension).
 
 #### Example
 
@@ -36,7 +39,7 @@ actions:
 
 #### Interpolation
 
-Most properties support injecting environment variables (and procedure arguments)
+Some properties support injecting environment variables and procedure arguments
 using the double curly braces `{{` and `}}` as delimiters. This is particularly
 useful to avoid committing sensitive values such as user passwords.
 

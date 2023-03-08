@@ -12,6 +12,7 @@ procedures:
     - fill: { selector: "input[name=password]", value: "{{ args.password }}" }
     - select: { selector: "select[name=type]", value: "local" }
     - check: input[name=remember]
+    - scroll: a#submit
     - click: a#submit
 
 actions:

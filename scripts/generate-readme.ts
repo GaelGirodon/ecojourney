@@ -41,7 +41,7 @@ sections.analysers = render(templates.analysers, { analysers });
 // Replace sections in README.md
 for (const key of Object.keys(sections)) {
     readme = readme.replace(
-        new RegExp(`(<!-- ${key}.start -->).*(<!-- ${key}.end -->)`, "s"),
+        new RegExp(`(<!-- <${key}> -->).*(<!-- </${key}> -->)`, "s"),
         `$1\n${sections[key].trim()}\n$2`
     );
 }

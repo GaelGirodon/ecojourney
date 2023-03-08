@@ -145,7 +145,7 @@ ecojourney audit mywebsite.yml --dry-run
 
 _Ecojourney_ commands can be executed from a terminal:
 
-<!-- cli.start -->
+<!-- <cli> -->
 ```shell
 ecojourney [options] [command]
 ```
@@ -213,14 +213,17 @@ ecojourney init [options] [path]
 | Flags        | Description              | Default | Environment variable |
 | ------------ | ------------------------ | ------- | -------------------- |
 | `-h, --help` | Display help for command |         |                      |
-<!-- cli.end -->
+<!-- </cli> -->
 
 ### Manifest
 
-<!-- manifest.start -->
+<!-- <manifest> -->
 The manifest file allows to describe the audit scenario and configuration.
 
-It can be easily and interactively initialised using the [`init`](#init) command.
+It can be easily and interactively initialised using the [`init`](#init)
+command. A [JSON schema](./src/audit/manifest/manifest.schema.json) is also
+provided to enable code completion and validation in your IDE (using built-in
+JSON schema support for YAML files or via an extension).
 
 #### Example
 
@@ -256,7 +259,7 @@ actions:
 
 #### Interpolation
 
-Most properties support injecting environment variables (and procedure arguments)
+Some properties support injecting environment variables and procedure arguments
 using the double curly braces `{{` and `}}` as delimiters. This is particularly
 useful to avoid committing sensitive values such as user passwords.
 
@@ -665,7 +668,7 @@ actions:
       args: { username: user, password: "{{ env.USER_PASSWORD }}" }
   - ...
 ```
-<!-- manifest.end -->
+<!-- </manifest> -->
 
 ### Report
 
@@ -715,7 +718,7 @@ Each page from the browsing scenario is analysed by a list of analysers, each
 one collecting metrics and identifying issues regarding eco-design best
 practices.
 
-<!-- analysers.start -->
+<!-- <analysers> -->
 ### EcoIndex (`ecoindex`)
 
 EcoIndex and related metrics calculation
@@ -765,7 +768,7 @@ Check for fonts
 | Id                   | Name               | Description                                       |
 | -------------------- | ------------------ | ------------------------------------------------- |
 | `use-standard-fonts` | Use standard fonts | Use fonts already pre-installed on user terminals |
-<!-- analysers.end -->
+<!-- </analysers> -->
 
 ## License
 

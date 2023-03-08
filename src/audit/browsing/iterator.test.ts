@@ -1,5 +1,7 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import sinon from "sinon";
+import { defaultConfig } from "../config.js";
+import { Context } from "../context.js";
 import { Action } from "./action.js";
 import { ClickAction } from "./actions/click.js";
 import { FillAction } from "./actions/fill.js";
@@ -9,8 +11,6 @@ import { ProcedureAction } from "./actions/procedure.js";
 import { ScenarioAction } from "./actions/scenario.js";
 import { WaitAction } from "./actions/wait.js";
 import { ActionIterator } from "./iterator.js";
-import { Context } from "../context.js";
-import { defaultConfig } from "../config.js";
 
 describe("ActionIterator", () => {
     it("should iterate through and run actions", async () => {
@@ -40,8 +40,8 @@ describe("ActionIterator", () => {
         while (iterator.hasNext() && i++ < 10) {
             await iterator.runNext(ctx);
         }
-        assert.strictEqual(i, 7);
-        assert.strictEqual(fakeRun.callCount, 7);
+        assert.equal(i, 7);
+        assert.equal(fakeRun.callCount, 7);
         assert.rejects(() => iterator.runNext(ctx));
     });
 });

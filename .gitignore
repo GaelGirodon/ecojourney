@@ -6,7 +6,7 @@ coverage/
 dist/
 node_modules/
 pkg/
-test/e2e/output/
+test/**/output/
 tmp/
 *.tgz
 test-results.xml

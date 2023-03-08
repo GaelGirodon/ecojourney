@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { ScreenshotAction } from "./screenshot.js";
 
 describe("ScreenshotAction", () => {
@@ -9,7 +9,7 @@ describe("ScreenshotAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new ScreenshotAction("", t.props);
-                assert.strictEqual(action.path, t.path);
+                assert.equal(action.path, t.path);
             });
         }
     });

@@ -48,12 +48,10 @@ export function cli(): Command {
         .addOption(new Option("-b, --browser [browser]",
             "browser to run the audit with")
             .choices(["msedge", "chrome", "chromium", "firefox", "webkit"])
-            // .default("chromium")
             .env(`${envPrefix}_AUDIT_BROWSER`))
         .addOption(new Option("-H, --headless [headless]",
             "run browser in headless mode")
             .choices(["true", "false"])
-            // .default(true)
             .preset("true")
             .argParser((value) => /^(true|1)$/.test(`${value}`))
             .env(`${envPrefix}_AUDIT_HEADLESS`))
@@ -70,17 +68,14 @@ export function cli(): Command {
             .env(`${envPrefix}_AUDIT_TIMEOUT`))
         .addOption(new Option("-r, --retries [retries]",
             "number of retries in case of failure")
-            // .default(0)
             .argParser(parseInt)
             .env(`${envPrefix}_AUDIT_RETRIES`))
         .addOption(new Option("-o, --output [output]",
             "directory to write reports to")
-            // .default(".")
             .env(`${envPrefix}_AUDIT_OUTPUT`))
         .addOption(new Option("-f, --formats [formats...]",
             "output report formats")
             .choices(["json"])
-            // .default(["json"])
             .env(`${envPrefix}_AUDIT_FORMATS`))
         .addOption(new Option("-s, --dry-run",
             "simulate the audit without actually running the browser")

@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { WaitAction } from "./wait.js";
 
 describe("WaitAction", () => {
@@ -11,8 +11,8 @@ describe("WaitAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new WaitAction("", t.props);
-                assert.strictEqual(action.state, t.state);
-                assert.strictEqual(action.selector, t.selector);
+                assert.equal(action.state, t.state);
+                assert.equal(action.selector, t.selector);
             });
         }
     });

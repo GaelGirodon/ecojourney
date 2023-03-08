@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { SelectAction } from "./select.js";
 
 describe("SelectAction", () => {
@@ -10,8 +10,8 @@ describe("SelectAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new SelectAction("", t.props);
-                assert.strictEqual(action.selector, t.selector);
-                assert.deepStrictEqual(action.values, t.values);
+                assert.equal(action.selector, t.selector);
+                assert.deepEqual(action.values, t.values);
             });
         }
     });

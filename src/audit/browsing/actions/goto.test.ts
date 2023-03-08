@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { GotoAction } from "./goto.js";
 
 describe("GotoAction", () => {
@@ -9,7 +9,7 @@ describe("GotoAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new GotoAction("", t.props);
-                assert.strictEqual(action.url, t.url);
+                assert.equal(action.url, t.url);
             });
         }
     });

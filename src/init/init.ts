@@ -12,10 +12,12 @@ import { schema } from "./schema.js";
  * @param path Path to the audit manifest file to create
  * @param opts Commande line options
  */
-export async function init(path: string, opts: InitOptions) {
+export async function init(path: string | undefined, opts: InitOptions) {
     // Interactive questionnaire
     const res = await prompts(questions(path), {
-        onCancel: () => process.exit(1)
+        onCancel: () => {
+            throw new Error("Manifest file initialisation cancelled");
+        }
     });
 
     // Prepare data for injection in the manifest template

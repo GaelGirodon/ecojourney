@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { PageAction } from "./page.js";
 
 describe("PageAction", () => {
@@ -9,7 +9,7 @@ describe("PageAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new PageAction("", t.props);
-                assert.strictEqual(action.name, t.name);
+                assert.equal(action.name, t.name);
             });
         }
     });

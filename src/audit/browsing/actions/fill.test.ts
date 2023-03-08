@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { FillAction } from "./fill.js";
 
 describe("FillAction", () => {
@@ -9,8 +9,8 @@ describe("FillAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new FillAction("", t.props);
-                assert.strictEqual(action.selector, t.selector);
-                assert.strictEqual(action.value, t.value);
+                assert.equal(action.selector, t.selector);
+                assert.equal(action.value, t.value);
             });
         }
     });

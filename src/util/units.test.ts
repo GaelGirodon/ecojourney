@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { bytes, round, seconds } from "./units.js";
 
 describe("units", () => {
@@ -11,7 +11,7 @@ describe("units", () => {
             { value: 1234567890123, output: "1.23 TB" }
         ]) {
             it(`should return ${t.output} for value ${t.value}`, () => {
-                assert.strictEqual(bytes(t.value), t.output);
+                assert.equal(bytes(t.value), t.output);
             });
         }
     });
@@ -24,7 +24,7 @@ describe("units", () => {
             { value: 0.001, output: "1 ms" }
         ]) {
             it(`should return ${t.output} for value ${t.value}`, () => {
-                assert.strictEqual(seconds(t.value), t.output);
+                assert.equal(seconds(t.value), t.output);
             });
         }
     });
@@ -37,7 +37,7 @@ describe("units", () => {
             { value: 9.8765, scale: 2, output: 9.88 }
         ]) {
             it(`should return ${t.output} for value ${t.value}`, () => {
-                assert.strictEqual(round(t.value, t.scale), t.output);
+                assert.equal(round(t.value, t.scale), t.output);
             });
         }
     });

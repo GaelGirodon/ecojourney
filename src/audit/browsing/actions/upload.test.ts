@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { UploadAction } from "./upload.js";
 
 describe("UploadAction", () => {
@@ -10,8 +10,8 @@ describe("UploadAction", () => {
         ]) {
             it(`should create an action with props as ${t.type}`, () => {
                 const action = new UploadAction("", t.props);
-                assert.strictEqual(action.selector, t.selector);
-                assert.deepStrictEqual(action.files, t.files);
+                assert.equal(action.selector, t.selector);
+                assert.deepEqual(action.files, t.files);
             });
         }
     });

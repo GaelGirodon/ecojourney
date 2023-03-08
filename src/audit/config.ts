@@ -1,8 +1,8 @@
+import { InvalidArgumentError } from "commander";
 import { stat } from "node:fs/promises";
 import { devices, LaunchOptions } from "playwright-core";
-import { ReportFormat } from "./report/model.js";
-import { InvalidArgumentError } from "commander";
 import { renderObject } from "./browsing/template.js";
+import { ReportFormat } from "./report/model.js";
 
 /**
  * Audit configuration
@@ -73,6 +73,8 @@ export async function loadConfig(fromCli: Config, fromManifest: Config) {
         }, {});
     // Merge configuration
     let config = Object.assign({}, defaultConfig, fromManifest, fromCli);
+    config.headers = Object.assign({}, ...[fromManifest, fromCli]
+        .map(c => c.headers).filter(c => c));
     // Render templates
     config = renderObject(config, { env: process.env }) as Config;
     // Device
