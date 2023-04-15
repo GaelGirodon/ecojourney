@@ -231,7 +231,7 @@
                 "properties": {
                   "selector": {
                     "title": "Selector",
-                    "description": "The selector to use when resolving the DOM element",
+                    "description": "The selector to use when resolving the DOM element (supports templating)",
                     "type": "string",
                     "example": "#search"
                   },
@@ -251,9 +251,8 @@
             "title": "Navigate to the given URL.",
             "oneOf": [
               {
-                "description": "The target HTTP/HTTPS URL",
+                "description": "The target HTTP/HTTPS URL (supports templating)",
                 "type": "string",
-                "format": "uri",
                 "example": "https://mywebsite.net/admin"
               },
               {
@@ -261,9 +260,8 @@
                 "properties": {
                   "url": {
                     "title": "Url",
-                    "description": "The target HTTP/HTTPS URL",
+                    "description": "The target HTTP/HTTPS URL (supports templating)",
                     "type": "string",
-                    "format": "uri",
                     "example": "https://mywebsite.net/admin"
                   }
                 },

@@ -14,6 +14,9 @@ export class Issue {
         /** Issue data */
         public data: IssueData
     ) {
+        this.data = Object.assign({
+            occurrences: 1
+        }, data);
         this.time = new Date();
     }
 
@@ -24,6 +27,17 @@ export class Issue {
         return { ...this.rule, ...this.data };
     }
 
+    /**
+     * Determine whether the 'a' issue is before, equal or after
+     * the 'b' issue.
+     * @param a Issue to compare with the 'b' issue
+     * @param b Issue to compare with the 'a' issue
+     * @returns 'a' is before (<0) / equal to (0) / after (>0) 'b'
+     */
+    static compare(a: Issue, b: Issue): number {
+        const order = IssueSeverity.compare(a.data.severity, b.data.severity);
+        return order !== 0 ? order : a.rule.id.localeCompare(b.rule.id);
+    }
 }
 
 /**
@@ -35,51 +49,83 @@ export interface IssueData {
     /** Issue rule unique identifier */
     readonly id: RuleId;
 
-    /** Element affected by the issue */
-    readonly element: string;
-
     /** Issue severity */
     readonly severity: IssueSeverity;
 
-    /** Issue occurrences count */
-    readonly occurrences: number;
+    /** Issue additional details */
+    readonly details?: string;
+
+    /** Issue occurrences count (default: 1) */
+    readonly occurrences?: number;
 
 }
 
 /**
  * Issue severity level
  */
-export enum IssueSeverity {
+export class IssueSeverity {
 
     /**
      * A finding worth mentioning but not serious
      */
-    Info = "info",
+    static Info = new IssueSeverity(0, "info");
 
     /**
      * An issue that have a minor responsibility in the environmental
      * impact of the application, it should be fixed.
      */
-    Minor = "minor",
+    static Minor = new IssueSeverity(1, "minor");
 
     /**
      * An issue that have a major responsibility in the environmental
      * impact of the application, it should be promptly fixed.
      */
-    Major = "major",
+    static Major = new IssueSeverity(2, "major");
 
     /**
      * An issue that have a massive responsibility in the environmental
      * impact of the application, fixing it will hugely reduce the impact.
      */
-    Critical = "critical"
+    static Critical = new IssueSeverity(3, "critical");
 
-}
+    /**
+     * Initialise an issue severity level.
+     * @param value Numeric severity level
+     * @param label Severity level name
+     */
+    private constructor(
+        readonly value: number,
+        readonly label: "info" | "minor" | "major" | "critical"
+    ) { }
 
-/**
- * Issue severity level builder
- */
-export class IssueSeverityBuilder {
+    /**
+     * Shift the severity level up or down.
+     * @param s Initial severity level
+     * @param offset Level offset (negative/positive to lower/increase the severity)
+     * @returns The output issue severity level
+     */
+    shift(offset: number): IssueSeverity {
+        const i = IssueSeverities.indexOf(this);
+        if (i < 0) { // Unknown severity level
+            return this;
+        }
+        const j = Math.max(Math.min(i + offset, IssueSeverities.length), 0);
+        return IssueSeverities[j];
+    }
+
+    /**
+     * @returns The string representation of this severity level
+     */
+    toString() {
+        return this.label
+    }
+
+    /**
+     * @returns The object to serialize as JSON
+     */
+    toJSON() {
+        return this.label;
+    }
 
     /**
      * Compute the issue severity level from thresholds.
@@ -97,4 +143,26 @@ export class IssueSeverityBuilder {
             return IssueSeverity.Major;
         return IssueSeverity.Critical;
     }
+
+    /**
+     * Determine whether the 'a' issue severity level is before, equal or after
+     * the 'b' issue severity level.
+     * @param a Issue severity level to compare with the 'b' issue severity level
+     * @param b Issue severity level to compare with the 'a' issue severity level
+     * @returns 'a' is before (<0) / equal to (0) / after (>0) 'b'
+     */
+    static compare(a: IssueSeverity, b: IssueSeverity): number {
+        return b.value - a.value;
+    }
+
 }
+
+/**
+ * Issue severity levels
+ */
+export const IssueSeverities = [
+    IssueSeverity.Info,
+    IssueSeverity.Minor,
+    IssueSeverity.Major,
+    IssueSeverity.Critical
+];

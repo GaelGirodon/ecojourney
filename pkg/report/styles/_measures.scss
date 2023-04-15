@@ -21,10 +21,6 @@
                 font-size: 1.5rem;
             }
         }
-
-        &.measures-secondary {
-            border-top: solid 1px $white-ter;
-        }
     }
 
     @include from($tablet) {
@@ -34,9 +30,37 @@
             &.measures-primary .level-item {
                 width: 25%;
             }
+        }
+    }
 
-            &.measures-secondary .level-item {
-                width: 20%;
+    .measures-secondary {
+        margin: 0;
+        background-color: $white-bis;
+        border-top: solid 1px hsl(0, 0%, 92%);
+        overflow: hidden;
+
+        &>.column {
+            padding: 0.6rem 0.75rem;
+            border-bottom: solid 1px hsl(0, 0%, 92%);
+            margin-bottom: -1px;
+
+            .heading {
+                margin: 0;
+                line-height: $body-size;
+                text-align: right;
+
+                @include until($tablet) {
+                    text-align: center;
+                }
+            }
+
+            .value {
+                font-weight: 600;
+                text-align: left;
+
+                @include until($tablet) {
+                    text-align: center;
+                }
             }
         }
     }

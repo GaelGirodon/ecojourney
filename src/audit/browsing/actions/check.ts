@@ -17,7 +17,8 @@ export class CheckAction extends Action {
     constructor(props: ActionProperties) {
         super();
         this.selector = Array.isArray(props) ? props[0] : props.selector;
-        this.state = Array.isArray(props) && props.length > 1 ? props[1] : (props.state ?? "check");
+        this.state = Array.isArray(props) && props.length > 1 ? props[1]
+            : ((props as { [key: string]: any }).state ?? "check");
     }
 
     async run(ctx: Context) {

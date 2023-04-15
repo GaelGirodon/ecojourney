@@ -28,6 +28,14 @@
             border-radius: 4px;
         }
     }
+
+    th:last-child, td:last-child {
+        width: 50%;
+        max-width: 500px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 // Severity level icon

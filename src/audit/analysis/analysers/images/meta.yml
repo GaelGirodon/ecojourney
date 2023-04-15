@@ -1,0 +1,47 @@
+id: images
+name: Images
+description: Check images
+metrics:
+  raster-images-count:
+    id: raster-images-count
+    name: Raster images
+    description: The number of raster images
+    order: 70
+    aggregation: sum
+  raster-images-size:
+    id: raster-images-size
+    name: Raster images size
+    description: The total size of raster images
+    order: 70
+    unit: byte
+    aggregation: sum
+  vector-images-count:
+    id: vector-images-count
+    name: Vector images
+    description: The number of vector images
+    order: 70
+    aggregation: sum
+  vector-images-size:
+    id: vector-images-size
+    name: Vector images size
+    description: The total size of vector images
+    order: 70
+    unit: byte
+    aggregation: sum
+rules:
+  optimise-image:
+    id: optimise-image
+    name: Optimise image
+    description: Replace raster images with CSS, font glyphs or vector images
+      when possible, otherwise use the right format (WebP, AVIF, PNG) and compression
+    references: [115bp#37, 115bp#48, 115bp#49, 115bp#100]
+  optimise-vector-image:
+    id: optimise-vector-image
+    name: Optimise vector image
+    description: Optimise and minimise SVG images
+    references: [115bp#99]
+  serve-right-sized-image:
+    id: serve-right-sized-image
+    name: Serve right-sized image
+    description: Serve pre-resized image instead of resizing browser-side
+    references: [115bp#47]

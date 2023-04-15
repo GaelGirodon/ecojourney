@@ -15,6 +15,9 @@ export async function loadManifest(path: string): Promise<Manifest> {
         ? { url: path } as Manifest // From a website page URL
         : await getManifest(path);  // Load, parse and validate a manifest file
     manifest.time = new Date();
+    if (!manifest.name) {
+        manifest.name = manifest.url.replace(/^\w+:\/\/|\/+$/g, "");
+    }
     return manifest;
 }
 

@@ -24,7 +24,7 @@ $subtitle-line-height: $body-line-height;
 // Global variables
 //
 
-$layout-width: calc($widescreen + 1px);
+$layout-width: calc($widescreen + 128px + 1px);
 $sidebar-width: 304px;
 $grades: (
     "A": #00a851,

@@ -120,7 +120,7 @@ export class Context {
         }
         if (this.browserContext === undefined) {
             log.debug("New browser context");
-            let options: BrowserContextOptions | undefined = {};
+            const options: BrowserContextOptions | undefined = {};
             if (this.config.device) {
                 Object.assign(options, devices[this.config.device]);
             }

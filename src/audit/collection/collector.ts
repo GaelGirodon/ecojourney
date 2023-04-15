@@ -1,5 +1,6 @@
 import playwright from "playwright-core";
 import log from "../../util/log.js";
+import * as units from "../../util/units.js";
 import { RequestArtifact, ResponseArtifact } from "./artifact.js";
 
 /**
@@ -49,14 +50,21 @@ export class ArtifactCollector {
         if (!(this.enable && response.url().startsWith("http"))) {
             return;
         }
-        log.debug("Collect response: %s => %d %s", response.url(),
-            response.status(), response.statusText());
         const asyncBody = response.body().catch(() => null);
         this._asyncTasks.push(asyncBody);
         const body = await asyncBody;
+        const asyncSizes = response.request().sizes()
+            .catch(() => ({ responseBodySize: -1 }));
+        this._asyncTasks.push(asyncSizes);
+        const sizes = await asyncSizes;
         const contentLength = parseInt(response.headers()["content-length"]);
-        const bodyLength = contentLength > 0 ? contentLength : (body?.byteLength ?? 0);
-        this.responses.push({ response, body, bodyLength });
+        const bodyLength = [sizes?.responseBodySize, contentLength, body?.byteLength]
+            .find(len => len && len > 0) ?? 0;
+        const servedFromCache = response.request().timing().requestStart < 0;
+        log.debug("Collect response: %s => %d %s (%s)%s", response.url(),
+            response.status(), response.statusText(), units.bytes(bodyLength),
+            servedFromCache ? " [cache]" : "");
+        this.responses.push({ response, body, bodyLength, servedFromCache });
     }
 
     /**

@@ -26,6 +26,15 @@ focused on best practices over scoring.
 _Ecojourney_ analyses a browsing scenario on a web application, collecting
 metrics and issues about eco-design best practices.
 
+It is made to help developers improve their web application by highlighting
+issues to fix in order to reduce its environmental impact, primarily on
+end-user devices and network infrastructures. But this is not enough to affirm
+that a web application is environmental friendly: an _Ecojourney_ audit should
+be completed by automated and manual source code analysis, server-side
+application analysis (e.g. energy consumption metrology with Scaphandre), and
+should come after a rigorous UX design process (to focus on simple and useful
+features), Life-Cycle Assessments (ISO 14040 & 14044), and more.
+
 Under the hood, this tool is built to be modular, extensible (_coming soon!_),
 and it uses a carefully selected small set of NPM dependencies (8, including
 transitive ones). Playwright is the main one, enabling cross-browser web
@@ -51,7 +60,7 @@ trying to bring different features and/or various improvements:
 
 - **Node.js 18.x or newer**
 - **A web browser**: Google Chrome, Microsoft Edge
-  or a [Playwright supported browser](https://playwright.dev/docs/cli#install-browsers)
+  or a [Playwright supported browser](https://playwright.dev/docs/browsers)
 
 📦 **Install using `npm`:**
 
@@ -188,9 +197,9 @@ ecojourney audit [options] <path>
 | Flags                        | Description                                                      | Default     | Environment variable        |
 | ---------------------------- | ---------------------------------------------------------------- | ----------- | --------------------------- |
 | `-b, --browser [browser]`    | Browser to run the audit with                                    | `chromium`  | `ECOJOURNEY_AUDIT_BROWSER`  |
-| `-H, --headless [headless]`  | Run browser in headless mode                                     | `true`      | `ECOJOURNEY_AUDIT_HEADLESS` |
+| `-l, --headless [headless]`  | Run browser in headless mode                                     | `true`      | `ECOJOURNEY_AUDIT_HEADLESS` |
 | `-d, --device [device]`      | Simulate browser behavior for a specific device (e.g. Galaxy S8) |             | `ECOJOURNEY_AUDIT_DEVICE`   |
-| `-h, --headers [headers...]` | Additional HTTP headers to be sent with every request            |             | `ECOJOURNEY_AUDIT_HEADERS`  |
+| `-H, --headers [headers...]` | Additional HTTP headers to be sent with every request            |             | `ECOJOURNEY_AUDIT_HEADERS`  |
 | `-t, --timeout [timeout]`    | Maximum time to wait for navigations or actions, in milliseconds |             | `ECOJOURNEY_AUDIT_TIMEOUT`  |
 | `-r, --retries [retries]`    | Number of retries in case of failure                             | `0`         | `ECOJOURNEY_AUDIT_RETRIES`  |
 | `-o, --output [output]`      | Directory to write reports to                                    | `.`         | `ECOJOURNEY_AUDIT_OUTPUT`   |
@@ -411,10 +420,10 @@ _Argument:_ the selector to use when resolving the DOM element and the value to 
     value: "Eco-design"
 ```
 
-| Property   | Type     | Description                                        | Required |
-| ---------- | -------- | -------------------------------------------------- | :------: |
-| `selector` | `string` | The selector to use when resolving the DOM element |    ☑️     |
-| `value`    | `string` | The value to set (supports templating)             |    ☑️     |
+| Property   | Type     | Description                                                              | Required |
+| ---------- | -------- | ------------------------------------------------------------------------ | :------: |
+| `selector` | `string` | The selector to use when resolving the DOM element (supports templating) |    ☑️     |
+| `value`    | `string` | The value to set (supports templating)                                   |    ☑️     |
 
 ##### `goto`
 
@@ -422,7 +431,7 @@ Navigate to the given URL.
 
 **Abbreviated syntax**
 
-_Argument:_ the target HTTP/HTTPS URL
+_Argument:_ the target HTTP/HTTPS URL (supports templating)
 
 ```yaml
 - goto: "https://mywebsite.net/admin"
@@ -435,9 +444,9 @@ _Argument:_ the target HTTP/HTTPS URL
     url: "https://mywebsite.net/admin"
 ```
 
-| Property | Type     | Description               | Required |
-| -------- | -------- | ------------------------- | :------: |
-| `url`    | `string` | The target HTTP/HTTPS URL |    ☑️     |
+| Property | Type     | Description                                     | Required |
+| -------- | -------- | ----------------------------------------------- | :------: |
+| `url`    | `string` | The target HTTP/HTTPS URL (supports templating) |    ☑️     |
 
 ##### `page`
 
@@ -723,38 +732,51 @@ one collecting metrics and identifying issues regarding eco-design best
 practices.
 
 <!-- <analysers> -->
-### EcoIndex (`ecoindex`)
+### Cache (`cache`)
 
-EcoIndex and related metrics calculation
-
-#### Metrics
-
-| Id                          | Name                        | Description                   |
-| --------------------------- | --------------------------- | ----------------------------- |
-| `eco-index`                 | EcoIndex                    | The EcoIndex                  |
-| `greenhouse-gases-emission` | 🌫️ Greenhouse gases emission | The greenhouse gases emission |
-| `water-consumption`         | 💧 Water consumption         | The water consumption         |
-| `requests-count`            | Requests count              | The number of requests        |
-| `responses-size`            | Responses size              | The responses total size      |
-| `dom-elements-count`        | DOM elements count          | The number of DOM elements    |
-
-### Embedded assets (`embedded-assets`)
-
-Check for embedded styles and scripts
-
-#### Metrics
-
-| Id                 | Name             | Description                    |
-| ------------------ | ---------------- | ------------------------------ |
-| `embedded-styles`  | Embedded styles  | The number of embedded styles  |
-| `embedded-scripts` | Embedded scripts | The number of embedded scripts |
+Check cache headers
 
 #### Rules
 
-| Id                   | Name               | Description        |
-| -------------------- | ------------------ | ------------------ |
-| `externalise-style`  | Externalise style  | Externalise style  |
-| `externalise-script` | Externalise script | Externalise script |
+| Id                        | Name                    | Description                                                                                                                     |
+| ------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `configure-cache-headers` | Configure cache headers | Configure cache headers on static resources to enable HTTP caching (Cache-Control with a large max-age, ETag and Last-Modified) |
+
+### Cookies (`cookies`)
+
+Check cookies
+
+#### Rules
+
+| Id                              | Name                          | Description                                                 |
+| ------------------------------- | ----------------------------- | ----------------------------------------------------------- |
+| `optimise-cookies`              | Optimise cookies size         | Optimise cookies size and remove them when they are useless |
+| `no-cookie-for-static-resource` | No cookie for static resource | Host static resource on a domain without cookie             |
+
+### EcoIndex (`ecoindex`)
+
+EcoIndex and related metrics calculation and analysis
+
+#### Metrics
+
+| Id                          | Name                | Description                      |
+| --------------------------- | ------------------- | -------------------------------- |
+| `eco-index`                 | EcoIndex            | The EcoIndex                     |
+| `requests-count`            | Requests            | The number of HTTP requests      |
+| `responses-size`            | Responses size      | The total size of HTTP responses |
+| `dom-elements-count`        | DOM elements        | The number of DOM elements       |
+| `greenhouse-gases-emission` | 🌫️ GhG emission      | The greenhouse gases emission    |
+| `water-consumption`         | 💧 Water consumption | The water consumption            |
+| `redirections-count`        | Redirections        | The number of HTTP redirections  |
+
+#### Rules
+
+| Id                      | Name                  | Description                                                                          |
+| ----------------------- | --------------------- | ------------------------------------------------------------------------------------ |
+| `reduce-requests-count` | Reduce requests count | Reduce the number of requests                                                        |
+| `reduce-responses-size` | Reduce responses size | Reduce the responses size                                                            |
+| `reduce-dom-size`       | Reduce DOM size       | Reduce the number of elements in the DOM                                             |
+| `avoid-redirections`    | Avoid redirections    | Avoid redirections as they increase response time and resource consumption uselessly |
 
 ### Fonts (`fonts`)
 
@@ -762,16 +784,82 @@ Check for fonts
 
 #### Metrics
 
-| Id                     | Name                 | Description                      |
-| ---------------------- | -------------------- | -------------------------------- |
-| `external-fonts-count` | External fonts count | The number of external fonts     |
-| `external-fonts-size`  | External fonts size  | The total size of external fonts |
+| Id                     | Name                | Description                      |
+| ---------------------- | ------------------- | -------------------------------- |
+| `external-fonts-count` | External fonts      | The number of external fonts     |
+| `external-fonts-size`  | External fonts size | The total size of external fonts |
 
 #### Rules
 
 | Id                   | Name               | Description                                       |
 | -------------------- | ------------------ | ------------------------------------------------- |
 | `use-standard-fonts` | Use standard fonts | Use fonts already pre-installed on user terminals |
+
+### Images (`images`)
+
+Check images
+
+#### Metrics
+
+| Id                    | Name               | Description                     |
+| --------------------- | ------------------ | ------------------------------- |
+| `raster-images-count` | Raster images      | The number of raster images     |
+| `raster-images-size`  | Raster images size | The total size of raster images |
+| `vector-images-count` | Vector images      | The number of vector images     |
+| `vector-images-size`  | Vector images size | The total size of vector images |
+
+#### Rules
+
+| Id                        | Name                    | Description                                                                                                                                  |
+| ------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `optimise-image`          | Optimise image          | Replace raster images with CSS, font glyphs or vector images when possible, otherwise use the right format (WebP, AVIF, PNG) and compression |
+| `optimise-vector-image`   | Optimise vector image   | Optimise and minimise SVG images                                                                                                             |
+| `serve-right-sized-image` | Serve right-sized image | Serve pre-resized image instead of resizing browser-side                                                                                     |
+
+### Scripts (`scripts`)
+
+Check scripts
+
+#### Metrics
+
+| Id                       | Name                  | Description                        |
+| ------------------------ | --------------------- | ---------------------------------- |
+| `external-scripts-count` | External scripts      | The number of external scripts     |
+| `external-scripts-size`  | External scripts size | The total size of external scripts |
+| `embedded-scripts-count` | Embedded scripts      | The number of embedded scripts     |
+| `embedded-scripts-size`  | Embedded scripts size | The total size of embedded scripts |
+
+#### Rules
+
+| Id                     | Name                 | Description                                        |
+| ---------------------- | -------------------- | -------------------------------------------------- |
+| `externalise-script`   | Externalise script   | Avoid embedding script into the HTML page          |
+| `minify-script`        | Minify script        | Reduce the size of the script by minifying JS code |
+| `reduce-scripts-count` | Reduce scripts count | Reduce the number of scripts                       |
+| `reduce-script-size`   | Reduce script size   | Reduce the size of the script                      |
+
+### Style sheets (`stylesheets`)
+
+Check style sheets
+
+#### Metrics
+
+| Id                      | Name                 | Description                       |
+| ----------------------- | -------------------- | --------------------------------- |
+| `external-styles-count` | External styles      | The number of external styles     |
+| `external-styles-size`  | External styles size | The total size of external styles |
+| `embedded-styles-count` | Embedded styles      | The number of embedded styles     |
+| `embedded-styles-size`  | Embedded styles size | The total size of embedded styles |
+
+#### Rules
+
+| Id                    | Name                | Description                                              |
+| --------------------- | ------------------- | -------------------------------------------------------- |
+| `externalise-style`   | Externalise style   | Avoid embedding style sheet into the HTML page           |
+| `minify-style`        | Minify style        | Reduce the size of the style sheet by minifying CSS code |
+| `provide-print-style` | Provide print style | Optimise styles for printing                             |
+| `reduce-styles-count` | Reduce styles count | Reduce the number of style sheets                        |
+| `reduce-style-size`   | Reduce style size   | Reduce the size of the style sheet                       |
 <!-- </analysers> -->
 
 ## License

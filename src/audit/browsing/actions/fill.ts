@@ -22,8 +22,9 @@ export class FillAction extends Action {
 
     async run(ctx: Context) {
         log.info("Fill '%s' with '%s'", this.selector, this.value);
+        const selector = render(this.selector, ctx.data(this.args));
         const value = render(this.value, ctx.data(this.args));
-        await ctx.page().locator(this.selector).first().fill(value);
+        await ctx.page().locator(selector).first().fill(value);
         return { value };
     }
 

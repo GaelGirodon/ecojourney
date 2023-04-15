@@ -4,7 +4,7 @@ export default {
     plugins: [
         purgecss({
             content: ["./**/*.html"],
-            safelist: [/^[gs]-/],
+            safelist: [/^[gs]-/, "code"],
             dynamicAttributes: ["aria-expanded"]
         })
     ]

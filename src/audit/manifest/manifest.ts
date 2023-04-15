@@ -8,7 +8,7 @@ import { Config } from "../config.js";
 export interface Manifest {
 
     /** Name of the web application */
-    name?: string;
+    name: string;
 
     /** Description of the web application or of the current test */
     description?: string;

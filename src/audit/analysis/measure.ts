@@ -99,7 +99,8 @@ export class Measure {
 
     /**
      * Determine whether the 'a' measure has a higher, equal or lower
-     * priority 'b' the other measure.
+     * priority than the 'b' measure.
+     * @param a Measure to compare with the 'b' measure
      * @param b Measure to compare with the 'a' measure
      * @returns 'a' is before (<0) / equal to (0) / after (>0) 'b'
      */
@@ -113,7 +114,15 @@ export class Measure {
 /**
  * Measure grade from A (best) to worst (G)
  */
-export enum MeasureGrade { A = 0, B, C, D, E, F, G }
+export enum MeasureGrade {
+    A = 0,
+    B = 1,
+    C = 2,
+    D = 3,
+    E = 4,
+    F = 5,
+    G = 6
+}
 
 /**
  * A measure data returned by a page analyser

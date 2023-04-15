@@ -38,11 +38,12 @@ export class Analyser {
             for (const [id, measure] of Object.entries(paResult.measures || {})) {
                 result.measures.push(new Measure(this.metrics.get(id)!, measure));
             }
-            for (const issue of paResult.issues || []) {
+            for (const issue of paResult.issues?.filter(i => i.occurrences !== 0) || []) {
                 result.issues.push(new Issue(this.rules.get(issue.id)!, issue));
             }
         }
         result.measures.sort(Measure.compare);
+        result.issues.sort(Issue.compare);
         log.info("Page analysed: %d measures, %d issues",
             result.measures.length, result.issues.length);
         return result;
@@ -59,7 +60,8 @@ export class Analyser {
         const rules = new Map<RuleId, Rule>();
         const analysersDir = new URL("./analysers", import.meta.url);
         const dirs = (await readdir(analysersDir, { withFileTypes: true }))
-            .filter(f => f.isDirectory()).map(d => d.name);
+            .filter(f => f.isDirectory() && /^[\w\-]+$/.test(f.name))
+            .map(d => d.name);
         for (const dir of dirs) {
             const analyserClass = (await import(`./analysers/${dir}/index.js`)).default;
             const analyser = new analyserClass() as PageAnalyser;

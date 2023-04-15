@@ -1,0 +1,56 @@
+id: stylesheets
+name: Style sheets
+description: Check style sheets
+metrics:
+  external-styles-count:
+    id: external-styles-count
+    name: External styles
+    description: The number of external styles
+    order: 60
+    aggregation: sum
+  external-styles-size:
+    id: external-styles-size
+    name: External styles size
+    description: The total size of external styles
+    order: 60
+    unit: byte
+    aggregation: sum
+  embedded-styles-count:
+    id: embedded-styles-count
+    name: Embedded styles
+    description: The number of embedded styles
+    order: 60
+    aggregation: sum
+  embedded-styles-size:
+    id: embedded-styles-size
+    name: Embedded styles size
+    description: The total size of embedded styles
+    order: 60
+    unit: byte
+    aggregation: sum
+rules:
+  externalise-style:
+    id: externalise-style
+    name: Externalise style
+    description: Avoid embedding style sheet into the HTML page
+    references: [115bp#41]
+  minify-style:
+    id: minify-style
+    name: Minify style
+    description: Reduce the size of the style sheet by minifying CSS code
+    references: [115bp#77]
+  provide-print-style:
+    id: provide-print-style
+    name: Provide print style
+    description: Optimise styles for printing
+    references: [115bp#31]
+  reduce-styles-count:
+    id: reduce-styles-count
+    name: Reduce styles count
+    description: Reduce the number of style sheets
+    references: [115bp#35, 115bp#75]
+  reduce-style-size:
+    id: reduce-style-size
+    name: Reduce style size
+    description: Reduce the size of the style sheet
+    references: [115bp#15, 115bp#36, 115bp#77]

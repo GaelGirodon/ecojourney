@@ -18,17 +18,33 @@ app.set("views", join(stubRoot, "views"));
 mkdirSync(join(stubRoot, "static"), { recursive: true });
 cpSync(join(projectRoot, "node_modules/@picocss/pico/css/pico.css"),
     join(stubRoot, "static/pico.css"));
-app.use(express.static(join(stubRoot, "static")));
+cpSync(join(projectRoot, "node_modules/ejs/ejs.js"),
+    join(stubRoot, "static/ejs.js"));
+app.use(express.static(join(stubRoot, "static"), {
+    maxAge: "1y",
+    setHeaders(res, path) {
+        if (path.endsWith(".woff2")) {
+            res.set("Cache-Control", "no-cache");
+        }
+    }
+}));
 
 // Serve home page
 app.get("/", (_req, res) => {
     res.render("index", { page: "home", title: "Home" });
 });
 
+// Serve login
+app.post("/login", (req, res) => {
+    res.cookie("FAKE-SESSION-ID", "X".repeat(128));
+    res.redirect(`/${req.query.to}`);
+});
+
 // Serve other pages
 app.get("/:page(\\w+)", (req, res) => {
     const page = req.params.page;
-    res.render(page, { page, title: page.charAt(0).toUpperCase() + page.slice(1) });
+    const title = page.charAt(0).toUpperCase() + page.slice(1);
+    res.render(page, { page, title, query: req.query });
 });
 
 /**

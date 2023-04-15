@@ -19,7 +19,8 @@ export class WaitAction extends Action {
 
     constructor(props: ActionProperties) {
         super();
-        if (Array.isArray(props) && WaitAction.states.includes(props[0]) || props.state) {
+        if (Array.isArray(props) && WaitAction.states.includes(props[0])
+            || (props as { [key: string]: any }).state) {
             this.state = Array.isArray(props) ? props[0] : props.state;
         } else {
             this.selector = Array.isArray(props) ? props[0] : props.selector;

@@ -46,4 +46,7 @@ export interface ResponseArtifact {
     /** Browser response body length */
     readonly bodyLength: number;
 
+    /** Exchange has been loaded from the browser cache */
+    readonly servedFromCache: boolean;
+
 }

@@ -2,7 +2,7 @@
 
 <h1>Login</h1>
 
-<form>
+<form method="post" action="/login?to=<%= query.to %>">
     <input type="text" name="username" placeholder="Username" aria-label="Username" required>
     <input type="password" name="password" placeholder="Password" aria-label="Password" required>
     <select name="type" aria-label="Authentication type" required>
@@ -16,7 +16,7 @@
             Remember me
         </label>
     </fieldset>
-    <a id="submit" href="/" role="button">Login</a>
+    <button type="submit">Login</button>
 </form>
 
 <%- include("footer"); -%>

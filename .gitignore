@@ -7,6 +7,9 @@ dist/
 node_modules/
 test/**/output/
 tmp/
+*.png
 *.tgz
+*report.html
+*report.json
 template.html
 test-results.xml

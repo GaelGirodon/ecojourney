@@ -45,7 +45,7 @@ export function cli(): Command {
             "browser to run the audit with")
             .choices(["msedge", "chrome", "chromium", "firefox", "webkit"])
             .env(`${envPrefix}_AUDIT_BROWSER`))
-        .addOption(new Option("-H, --headless [headless]",
+        .addOption(new Option("-l, --headless [headless]",
             "run browser in headless mode")
             .choices(["true", "false"])
             .preset("true")
@@ -54,7 +54,7 @@ export function cli(): Command {
         .addOption(new Option("-d, --device [device]",
             "simulate browser behavior for a specific device (e.g. Galaxy S8)")
             .env(`${envPrefix}_AUDIT_DEVICE`))
-        .addOption(new Option("-h, --headers [headers...]",
+        .addOption(new Option("-H, --headers [headers...]",
             "additional HTTP headers to be sent with every request")
             .argParser(parseHttpHeader)
             .env(`${envPrefix}_AUDIT_HEADERS`))

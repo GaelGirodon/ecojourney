@@ -6,14 +6,14 @@ url: http://localhost:3000
 procedures:
   # Log a user in using the login form page
   login:
-    - goto: http://localhost:3000/login
+    - goto: "http://localhost:3000/login?to={{ args.to }}"
     - page: "Login page for {{ args.username }}"
     - fill: { selector: "input[name=username]", value: "{{ args.username }}" }
     - fill: { selector: "input[name=password]", value: "{{ args.password }}" }
     - select: { selector: "select[name=type]", value: "local" }
     - check: input[name=remember]
-    - scroll: a#submit
-    - click: a#submit
+    - scroll: button[type=submit]
+    - click: button[type=submit]
 
 actions:
   # User scenario
@@ -22,8 +22,7 @@ actions:
   - page: Home page
   - procedure:
       name: login
-      args: { username: user, password: "{{ env.USER_PASSWORD }}" }
-  - goto: http://localhost:3000/profile
+      args: { username: user, password: "{{ env.USER_PASSWORD }}", to: "profile" }
   - wait: main.profile
   - page: Profile page
   - screenshot: profile-page.png
@@ -34,8 +33,7 @@ actions:
   - page: Home page
   - procedure:
       name: login
-      args: { username: admin, password: "{{ env.ADMIN_PASSWORD }}" }
-  - goto: http://localhost:3000/admin
+      args: { username: admin, password: "{{ env.ADMIN_PASSWORD }}", to: "admin" }
   - wait: main.admin
   - page: Admin page
   - screenshot: admin-page.png

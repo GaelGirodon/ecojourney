@@ -58,13 +58,13 @@ export function createActions(manifest: Manifest) {
 
     // Add a first scenario if omitted (implicit) in the manifest file
     if (!(actions[0] instanceof ScenarioAction)) {
-        actions.unshift(new ScenarioAction({ name: manifest.name ?? manifest.url }));
+        actions.unshift(new ScenarioAction({ name: manifest.name }));
     }
 
     // Add a page analysis at the end if none was provided
     // (the user wants implicitly to analyse a single page)
     if (!actions.some(a => a instanceof PageAction)) {
-        actions.push(new PageAction({ name: manifest.name ?? manifest.url }));
+        actions.push(new PageAction({ name: manifest.name }));
     }
 
     log.debug("Actions enhanced: %d actions", actions.length);
@@ -99,5 +99,5 @@ function createAction(spec: ActionSpec): Action {
     const id = Object.keys(spec)[0];
     const value = spec[id] as (string | { [key: string]: string });
     const props = typeof value === "string" ? value.split(/, */g) : value;
-    return new factories[id]!(props);
+    return new factories[id](props);
 }

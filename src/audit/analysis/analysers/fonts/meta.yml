@@ -4,15 +4,15 @@ description: Check for fonts
 metrics:
   external-fonts-count:
     id: external-fonts-count
-    name: External fonts count
+    name: External fonts
     description: The number of external fonts
-    order: 50
+    order: 75
     aggregation: sum
   external-fonts-size:
     id: external-fonts-size
     name: External fonts size
     description: The total size of external fonts
-    order: 50
+    order: 75
     unit: byte
     aggregation: sum
 rules:
@@ -20,3 +20,4 @@ rules:
     id: use-standard-fonts
     name: Use standard fonts
     description: Use fonts already pre-installed on user terminals
+    references: [115bp#32]

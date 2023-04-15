@@ -1,0 +1,10 @@
+id: cache
+name: Cache
+description: Check cache headers
+rules:
+  configure-cache-headers:
+    id: configure-cache-headers
+    name: Configure cache headers
+    description: Configure cache headers on static resources to enable HTTP caching
+      (Cache-Control with a large max-age, ETag and Last-Modified)
+    references: [115bp#73, 115bp#74]

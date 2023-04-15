@@ -10,6 +10,9 @@
       "performance": {
         "noDelete": "warn"
       },
+      "style": {
+        "noNonNullAssertion": "warn"
+      },
       "suspicious": {
         "noExplicitAny": "off"
       }

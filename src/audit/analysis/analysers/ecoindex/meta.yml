@@ -1,23 +1,23 @@
 id: ecoindex
 name: EcoIndex
-description: EcoIndex and related metrics calculation
+description: EcoIndex and related metrics calculation and analysis
 metrics:
   requests-count:
     id: requests-count
-    name: Requests count
-    description: The number of requests
+    name: Requests
+    description: The number of HTTP requests
     order: 10
     aggregation: sum
   responses-size:
     id: responses-size
     name: Responses size
-    description: The responses total size
+    description: The total size of HTTP responses
     order: 11
     unit: byte
     aggregation: sum
   dom-elements-count:
     id: dom-elements-count
-    name: DOM elements count
+    name: DOM elements
     description: The number of DOM elements
     order: 12
     aggregation: sum
@@ -31,15 +31,40 @@ metrics:
     grade: [80, 70, 55, 40, 25, 10]
   greenhouse-gases-emission:
     id: greenhouse-gases-emission
-    name: 🌫️ Greenhouse gases emission
+    name: 🌫️ GhG emission
     description: The greenhouse gases emission
-    order: 2
-    unit: "gCO2e"
+    order: 50
+    unit: "gCO₂e"
     aggregation: sum
   water-consumption:
     id: water-consumption
     name: 💧 Water consumption
     description: The water consumption
-    order: 3
+    order: 50
     unit: "cl"
     aggregation: sum
+  redirections-count:
+    id: redirections-count
+    name: Redirections
+    description: The number of HTTP redirections
+    order: 50
+    aggregation: sum
+rules:
+  reduce-requests-count:
+    id: reduce-requests-count
+    name: Reduce requests count
+    description: Reduce the number of requests
+    references: [115bp#25, 115bp#46]
+  reduce-responses-size:
+    id: reduce-responses-size
+    name: Reduce responses size
+    description: Reduce the responses size
+  reduce-dom-size:
+    id: reduce-dom-size
+    name: Reduce DOM size
+    description: Reduce the number of elements in the DOM
+  avoid-redirections:
+    id: avoid-redirections
+    name: Avoid redirections
+    description: Avoid redirections as they increase response time and resource consumption uselessly
+    references: [115bp#112]

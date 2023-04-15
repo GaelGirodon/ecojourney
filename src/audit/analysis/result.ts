@@ -4,7 +4,7 @@ import { Config } from "../config.js";
 import { Manifest } from "../manifest/manifest.js";
 import { Metric, MetricId, Rule, RuleId } from "./analysers/spec.js";
 import { Issue, IssueSeverity } from "./issue.js";
-import { aggregateMeasures, Measure } from "./measure.js";
+import { Measure, aggregateMeasures } from "./measure.js";
 
 /**
  * A full analysis result to write to reports
@@ -150,9 +150,9 @@ export class PageResult {
  * @returns Global website analysis result
  */
 export function aggregateResults(pages: PageResult[]): WebsiteResult {
-    let scenarios: ScenarioResult[] = [];           // All scenarios to collect
-    let websiteMeasures: Measure[] = [];            // All measures to collect then aggregate
-    let websiteStats = new IssuesStatistics();      // Global statistics to aggregate
+    const scenarios: ScenarioResult[] = [];         // All scenarios to collect
+    const websiteMeasures: Measure[] = [];          // All measures to collect then aggregate
+    const websiteStats = new IssuesStatistics();    // Global statistics to aggregate
 
     let scenarioId: string = "";                    // Current scenario id
     let scenarioPages: PageAggregatedResult[] = []; // Scenario pages to collect
@@ -230,7 +230,7 @@ export class IssuesStatistics {
      */
     addFromIssues(issues: Issue[]) {
         for (const issue of issues) {
-            this[issue.data.severity] += 1;
+            this[issue.data.severity.label] += 1;
         }
         return this;
     }
@@ -241,7 +241,7 @@ export class IssuesStatistics {
             IssueSeverity.Minor,
             IssueSeverity.Major,
             IssueSeverity.Critical
-        ].map(s => ({ severity: s, count: this[s] }));
+        ].map(s => ({ severity: s, count: this[s.label] }));
     }
 
 }

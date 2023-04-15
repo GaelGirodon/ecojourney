@@ -23,7 +23,7 @@ export function render(value: string, data: ejs.Data) {
  * @returns The rendered object
  */
 export function renderObject(value: { [key: string]: any }, data: ejs.Data) {
-    let output = Object.assign({}, value);
+    const output = Object.assign({}, value);
     for (const key of Object.keys(value)) {
         const v = value[key];
         if (v?.constructor.name === "Object") {

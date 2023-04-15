@@ -8,4 +8,15 @@
   <%_ } -%>
 </p>
 
+<script>
+  /*<%= "*".repeat(100) %>*/
+  Promise.all([...Array(10).keys()].map(i => fetch(`/?q=${i}`)))
+    .then(res => console.log(`Fetched ${res.length} requests`));
+</script>
+
+<script>/* Too     */</script>
+<script>/* much    */</script>
+<script>/* scripts */</script>
+<script>/* ...     */</script>
+
 <%- include("footer"); -%>
