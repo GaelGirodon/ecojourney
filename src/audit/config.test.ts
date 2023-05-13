@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { format as _ } from "node:util";
-import { Config, loadConfig, parseHttpHeader } from "./config.js";
+import { Config, loadConfig, parseHttpHeaders } from "./config.js";
 
 describe("config", () => {
     describe("#loadConfig()", () => {
@@ -8,7 +8,7 @@ describe("config", () => {
             const fromCli: Config = {
                 headless: false,
                 device: "Galaxy S8",
-                headers: [["H1", "A"], ["H2", "B"]] as any,
+                headers: { "H1": "A", "H2": "B" },
                 dryRun: true,
                 verbose: true
             } as any;
@@ -47,22 +47,22 @@ describe("config", () => {
         }
     });
 
-    describe("#parseHttpHeader()", () => {
+    describe("#parseHttpHeaders()", () => {
         for (const t of [
-            { kv: "X-User: username", output: ["X-User", "username"] },
-            { kv: "Authorization: Basic xxxx", output: ["Authorization", "Basic xxxx"] }
+            { value: "X-User: user", previous: undefined, output: { "X-User": "user" } },
+            { value: "X-Roles: adm, usr", previous: { "X-User": "user" }, output: { "X-User": "user", "X-Roles": "adm, usr" } }
         ]) {
-            it(_("should parse '%s'", t.kv), () => {
-                assert.deepEqual(parseHttpHeader(t.kv), t.output);
+            it(_("should parse '%s' and merge with %o", t.value, t.previous), () => {
+                assert.deepEqual(parseHttpHeaders(t.value, t.previous), t.output);
             });
         }
 
         for (const t of [
-            { kv: "", output: [] },
-            { kv: "X-Invalid=Separator", output: [] }
+            { value: "" },
+            { value: "X-Invalid=Separator" }
         ]) {
-            it(_("should throw for '%s'", t.kv), () => {
-                assert.throws(() => parseHttpHeader(t.kv));
+            it(_("should throw for '%s'", t.value), () => {
+                assert.throws(() => parseHttpHeaders(t.value));
             });
         }
     });

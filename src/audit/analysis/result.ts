@@ -149,7 +149,7 @@ export class PageResult {
  * @param pages Page results
  * @returns Global website analysis result
  */
-export function aggregateResults(pages: PageResult[]): WebsiteResult {
+export function aggregateResults(pages: PageResult[] = []): WebsiteResult {
     const scenarios: ScenarioResult[] = [];         // All scenarios to collect
     const websiteMeasures: Measure[] = [];          // All measures to collect then aggregate
     const websiteStats = new IssuesStatistics();    // Global statistics to aggregate

@@ -19,7 +19,7 @@ export interface Config {
     device?: string;
 
     /** Additional HTTP headers to be sent with every request */
-    headers?: { [key: string]: string; };
+    headers?: HttpHeaders;
 
     /** Maximum time to wait for navigations or actions, in milliseconds */
     timeout?: number;
@@ -65,12 +65,6 @@ export const defaultConfig: Config = {
  * @returns The configuration
  */
 export async function loadConfig(fromCli: Config, fromManifest: Config) {
-    // Convert headers provided through the CLI as a string[][] to a map
-    fromCli.headers = (fromCli.headers as unknown as string[][])
-        ?.reduce((map: { [key: string]: string; }, [name, value]: string[]) => {
-            map[name.trim()] = value.trim();
-            return map;
-        }, {});
     // Merge configuration
     let config = Object.assign({}, defaultConfig, fromManifest, fromCli);
     config.headers = Object.assign({}, ...[fromManifest, fromCli]
@@ -104,14 +98,21 @@ export async function loadConfig(fromCli: Config, fromManifest: Config) {
 }
 
 /**
- * Parse an HTTP header provided as a "name: value" string.
- * @param kv The raw HTTP header
- * @returns Header name and value
+ * HTTP headers
  */
-export function parseHttpHeader(kv: string) {
-    const match = kv.match(/^([\w-]+): ?(.+)$/);
+export type HttpHeaders = { [key: string]: string; };
+
+/**
+ * Validate and parse HTTP headers provided as "name: value" strings.
+ * @param value The current HTTP header
+ * @param previous Already validated and parsed HTTP headers
+ * @returns Previous and current HTTP headers (if valid)
+ * @throws The current HTTP header is invalid.
+ */
+export function parseHttpHeaders(value: string, previous?: HttpHeaders): HttpHeaders {
+    const match = value.match(/^([\w-]+): ?(.+)$/);
     if (!match) {
         throw new InvalidArgumentError("Invalid HTTP header.");
     }
-    return [match[1], match[2]];
+    return Object.assign({}, previous, { [match[1]]: match[2].trim() });
 }

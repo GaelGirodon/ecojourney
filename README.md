@@ -194,18 +194,18 @@ ecojourney audit [options] <path>
 
 **Options**
 
-| Flags                        | Description                                                      | Default     | Environment variable        |
-| ---------------------------- | ---------------------------------------------------------------- | ----------- | --------------------------- |
-| `-b, --browser [browser]`    | Browser to run the audit with                                    | `chromium`  | `ECOJOURNEY_AUDIT_BROWSER`  |
-| `-l, --headless [headless]`  | Run browser in headless mode                                     | `true`      | `ECOJOURNEY_AUDIT_HEADLESS` |
-| `-d, --device [device]`      | Simulate browser behavior for a specific device (e.g. Galaxy S8) |             | `ECOJOURNEY_AUDIT_DEVICE`   |
-| `-H, --headers [headers...]` | Additional HTTP headers to be sent with every request            |             | `ECOJOURNEY_AUDIT_HEADERS`  |
-| `-t, --timeout [timeout]`    | Maximum time to wait for navigations or actions, in milliseconds |             | `ECOJOURNEY_AUDIT_TIMEOUT`  |
-| `-r, --retries [retries]`    | Number of retries in case of failure                             | `0`         | `ECOJOURNEY_AUDIT_RETRIES`  |
-| `-o, --output [output]`      | Directory to write reports to                                    | `.`         | `ECOJOURNEY_AUDIT_OUTPUT`   |
-| `-f, --formats [formats...]` | Output report formats                                            | `html,json` | `ECOJOURNEY_AUDIT_FORMATS`  |
-| `-s, --dry-run`              | Simulate the audit without actually running the browser          | `false`     | `ECOJOURNEY_AUDIT_DRY_RUN`  |
-| `-h, --help`                 | Display help for command                                         |             |                             |
+| Flags                       | Description                                                      | Default     | Environment variable        |
+| --------------------------- | ---------------------------------------------------------------- | ----------- | --------------------------- |
+| `-b, --browser [browser]`   | Browser to run the audit with                                    | `chromium`  | `ECOJOURNEY_AUDIT_BROWSER`  |
+| `-l, --headless [headless]` | Run browser in headless mode                                     | `true`      | `ECOJOURNEY_AUDIT_HEADLESS` |
+| `-d, --device [device]`     | Simulate browser behavior for a specific device (e.g. Galaxy S8) |             | `ECOJOURNEY_AUDIT_DEVICE`   |
+| `-H, --header [headers...]` | Additional HTTP headers to be sent with every request            |             | `ECOJOURNEY_AUDIT_HEADERS`  |
+| `-t, --timeout [timeout]`   | Maximum time to wait for navigations or actions, in milliseconds |             | `ECOJOURNEY_AUDIT_TIMEOUT`  |
+| `-r, --retry [retry]`       | Number of retries in case of failure                             | `0`         | `ECOJOURNEY_AUDIT_RETRY`    |
+| `-o, --output [output]`     | Directory to write reports to                                    | `.`         | `ECOJOURNEY_AUDIT_OUTPUT`   |
+| `-f, --format [formats...]` | Output report formats                                            | `html,json` | `ECOJOURNEY_AUDIT_FORMAT`   |
+| `-s, --dry-run`             | Simulate the audit without actually running the browser          | `false`     | `ECOJOURNEY_AUDIT_DRY_RUN`  |
+| `-h, --help`                | Display help for command                                         |             |                             |
 
 #### `init`
 
