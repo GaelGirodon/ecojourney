@@ -6,6 +6,7 @@ import { PageAnalyser } from "./analysers/analyser.js";
 import { Metric, MetricId, PageAnalyserSpec, Rule, RuleId } from "./analysers/spec.js";
 import { Issue } from "./issue.js";
 import { Measure } from "./measure.js";
+import { Reference } from "./reference.js";
 import { PageResult, Scenario } from "./result.js";
 
 /**
@@ -17,9 +18,9 @@ export class Analyser {
         /** Page analysers */
         readonly analysers: PageAnalyser[],
         /** Metrics definitions */
-        readonly metrics: Map<MetricId, Metric>,
+        readonly metrics: { [id: MetricId]: Metric },
         /** Rules definitions */
-        readonly rules: Map<RuleId, Rule>
+        readonly rules: { [id: RuleId]: Rule }
     ) { }
 
     /**
@@ -36,10 +37,10 @@ export class Analyser {
             log.debug("Run page analyser %s (%s)", pa.metadata.name, pa.metadata.id);
             const paResult = await pa.analyse(page);
             for (const [id, measure] of Object.entries(paResult.measures || {})) {
-                result.measures.push(new Measure(this.metrics.get(id)!, measure));
+                result.measures.push(new Measure(this.metrics[id]!, measure));
             }
             for (const issue of paResult.issues?.filter(i => i.occurrences !== 0) || []) {
-                result.issues.push(new Issue(this.rules.get(issue.id)!, issue));
+                result.issues.push(new Issue(this.rules[issue.id]!, issue));
             }
         }
         result.measures.sort(Measure.compare);
@@ -56,8 +57,8 @@ export class Analyser {
     static async init() {
         log.debug("Load page analysers");
         const analysers: PageAnalyser[] = [];
-        const metrics = new Map<MetricId, Metric>();
-        const rules = new Map<RuleId, Rule>();
+        const metrics: { [id: MetricId]: Metric } = {};
+        const rules: { [id: RuleId]: Rule } = {};
         const analysersDir = new URL("./analysers", import.meta.url);
         const dirs = (await readdir(analysersDir, { withFileTypes: true }))
             .filter(f => f.isDirectory() && /^[\w\-]+$/.test(f.name))
@@ -70,12 +71,13 @@ export class Analyser {
                 { encoding: "utf8" })) as PageAnalyserSpec;
             if (analyser.metadata.metrics) {
                 for (const [id, meta] of Object.entries(analyser.metadata.metrics)) {
-                    metrics.set(id, meta);
+                    metrics[id] = meta;
                 }
             }
             if (analyser.metadata.rules) {
                 for (const [id, meta] of Object.entries(analyser.metadata.rules)) {
-                    rules.set(id, meta);
+                    meta.references = meta.references?.map(r => Reference.expand(r)) ?? [];
+                    rules[id] = meta;
                 }
             }
             analysers.push(analyser);

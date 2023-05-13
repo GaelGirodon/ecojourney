@@ -1,29 +1,29 @@
 /**
- * Create an object composed of the picked object properties.
+ * Create an object composed of the picked object keys.
  * @param object The source object
- * @param properties The properties to pick
+ * @param keys The keys to pick
  * @returns The new object
  */
-export function pick(object: { [key: string]: any }, properties: string[]) {
+export function pick(object: { [key: string]: any }, keys: string[]) {
     const output: { [key: string]: any } = {};
-    for (const p of properties) {
-        if (object.hasOwnProperty(p)) {
-            output[p] = object[p];
+    for (const k of keys) {
+        if (object.hasOwnProperty(k) || object[k] !== undefined) {
+            output[k] = object[k];;
         }
     }
     return output;
 }
 
 /**
- * Create an object composed of the object properties that are not omitted.
+ * Create an object composed of the object keys that are not omitted.
  * @param object The source object
- * @param properties The properties to omit
+ * @param keys The keys to omit
  * @returns The new object
  */
-export function omit(object: { [key: string]: any }, properties: string[]) {
+export function omit(object: { [key: string]: any }, keys: string[]) {
     const output: { [key: string]: any } = Object.assign({}, object);
-    for (const p of properties) {
-        delete output[p];
+    for (const k of keys) {
+        delete output[k];
     }
     return output;
 }

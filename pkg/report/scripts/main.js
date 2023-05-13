@@ -1,4 +1,5 @@
 import { Collapse } from "./collapse";
+import { IssueModal } from "./issue-modal";
 import { ScrollSpy } from "./scroll-spy";
 
 new ScrollSpy()
@@ -6,3 +7,6 @@ new ScrollSpy()
 
 document.querySelectorAll("[data-collapse]")
     .forEach(el => new Collapse(el));
+
+new IssueModal(document.querySelectorAll(".issue"),
+    document.querySelector("#issue-modal"), rules);

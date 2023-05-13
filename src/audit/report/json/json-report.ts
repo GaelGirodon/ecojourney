@@ -16,9 +16,7 @@ export async function jsonReport(data: ReportData) {
     const content = JSON.stringify({
         ...pick(data.manifest, ["name", "description", "url"]),
         config: pick(data.config, ["browser", "headless", "device", "dryRun"]),
-        result: data.result,
-        metrics: Object.fromEntries(data.metrics.entries()),
-        rules: Object.fromEntries(data.rules.entries())
+        ...pick(data, ["result", "metrics", "rules"])
     }, undefined, 2);
     await writeFile(output, content, { encoding: "utf8" });
     return output;

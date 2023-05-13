@@ -11,8 +11,6 @@
 .issues {
     .severity {
         justify-content: left;
-        font-weight: $weight-semibold;
-        text-transform: capitalize;
     }
 
     td {
@@ -36,6 +34,26 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    td:last-child {
+        position: relative;
+        padding-right: 2em;
+
+        &::after {
+            content: url(/icons/ellipsis.svg);
+            position: absolute;
+            right: 12px;
+            top: calc(50% - 8px);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            opacity: 0;
+        }
+    }
+
+    tr:hover td:last-child::after {
+        opacity: .75;
+    }
 }
 
 // Severity level icon
@@ -43,6 +61,8 @@
     display: flex;
     justify-content: center;
     gap: 0.25em;
+    font-weight: $weight-semibold;
+    text-transform: capitalize;
 
     &.s-none {
         opacity: 0.5;
@@ -67,4 +87,19 @@
         }
     }
 
+}
+
+// Modal
+.modal {
+    line-height: 1.5;
+
+    .modal-content {
+        .severity {
+            line-height: $body-line-height;
+        }
+
+        .message .message-body {
+            word-break: break-all;
+        }
+    }
 }

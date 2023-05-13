@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import { stub, publish } from "./vite.plugins";
+import { publish, stub } from "./vite.plugins";
 
 export default defineConfig({
     plugins: [

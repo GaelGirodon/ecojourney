@@ -5,25 +5,25 @@ import { omit, pick } from "./object.js";
 describe("object", () => {
     describe("#pick()", () => {
         for (const t of [
-            { object: {}, props: [], output: {} },
-            { object: { a: 1, b: 2 }, props: ["a"], output: { a: 1 } },
-            { object: { a: 1, b: 2 }, props: ["a", "c"], output: { a: 1 } },
-            { object: { a: 1, b: undefined, c: 3 }, props: ["a", "b"], output: { a: 1, b: undefined } }
+            { object: {}, keys: [], output: {} },
+            { object: { a: 1, b: 2 }, keys: ["a"], output: { a: 1 } },
+            { object: { a: 1, b: 2 }, keys: ["a", "c"], output: { a: 1 } },
+            { object: { a: 1, b: undefined, c: 3 }, keys: ["a", "b"], output: { a: 1, b: undefined } }
         ]) {
-            it(_("should return %O when picking properties %O from %O", t.output, t.props, t.object), () => {
-                assert.deepEqual(pick(t.object, t.props), t.output);
+            it(_("should return %O when picking keys %O from %O", t.output, t.keys, t.object), () => {
+                assert.deepEqual(pick(t.object, t.keys), t.output);
             });
         }
     });
 
     describe("#omit()", () => {
         for (const t of [
-            { object: {}, props: [], output: {} },
-            { object: { a: 1, b: 2 }, props: ["b"], output: { a: 1 } },
-            { object: { a: 1, b: 2 }, props: ["c"], output: { a: 1, b: 2 } }
+            { object: {}, keys: [], output: {} },
+            { object: { a: 1, b: 2 }, keys: ["b"], output: { a: 1 } },
+            { object: { a: 1, b: 2 }, keys: ["c"], output: { a: 1, b: 2 } }
         ]) {
-            it(_("should return %O when omitting properties %O from %O", t.output, t.props, t.object), () => {
-                assert.deepEqual(omit(t.object, t.props), t.output);
+            it(_("should return %O when omitting keys %O from %O", t.output, t.keys, t.object), () => {
+                assert.deepEqual(omit(t.object, t.keys), t.output);
             });
         }
     });

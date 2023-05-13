@@ -18,10 +18,10 @@ export interface AnalysisResult {
     readonly config: Config;
 
     /** Metrics definitions */
-    readonly metrics: Map<MetricId, Metric>;
+    readonly metrics: { [id: MetricId]: Metric };
 
     /** Rules definitions */
-    readonly rules: Map<RuleId, Rule>;
+    readonly rules: { [id: RuleId]: Rule };
 
     /** Analysis result */
     readonly result: WebsiteResult;

@@ -15,10 +15,10 @@ export interface ReportData {
     readonly config: Config;
 
     /** Metrics definitions */
-    readonly metrics: Map<MetricId, Metric>;
+    readonly metrics: { [id: MetricId]: Metric };
 
     /** Rules definitions */
-    readonly rules: Map<RuleId, Rule>;
+    readonly rules: { [id: RuleId]: Rule };
 
     /** Analysis result */
     readonly result: WebsiteResult;
@@ -33,4 +33,4 @@ export type ReportFormat = "html" | "json";
 /**
  * A report generator
  */
-export type ReportGenerator = (data: ReportData) => Promise<string>;
+export type ReportGenerator = (data: ReportData) => Promise<any>;

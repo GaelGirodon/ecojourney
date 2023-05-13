@@ -420,18 +420,21 @@
           </thead>
           <tbody>
             {%_ for (const i of p.issues) { -%}
-            <tr>
+            <tr class="issue" data-rule-id="{%= i.rule.id %}"
+                title="Show more details">
               <td>
                 <span class="severity s-{%= i.data.severity.label %}">
                   {%= i.data.severity.label %}
                 </span>
               </td>
-              <td title="{%= i.rule.description %}">
+              <td>
                 {%= i.rule.name %}
               </td>
               <td>
                 {%_ if (i.data.details) { -%}
-                {%- i.data.details %}
+                <span class="details">
+                  {%- i.data.details %}
+                </span>
                 {%_ } -%}
                 {%_ if (i.data.occurrences > 1) { -%}
                 <span class="count" title="{%= i.data.occurrences %} occurrences">
@@ -448,7 +451,14 @@
     </section>
     {%_ } -%}
   </main>
+  <!-- Issue modal -->
+  <div id="issue-modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content"></div>
+    <button class="modal-close is-large" aria-label="close"></button>
+  </div>
 
+  <script>var rules = {%- JSON.stringify(rules) %};</script>
   <script type="module" src="/scripts/main.js"></script>
 </body>
 

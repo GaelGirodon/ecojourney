@@ -1,3 +1,5 @@
+import { Reference } from "../reference.js";
+
 /**
  * Page analyser metadata defined using the meta.yml file
  */
@@ -59,5 +61,5 @@ export interface Rule {
     /** Rule tags */
     readonly tags: string[];
     /** Rule references */
-    readonly references: string[];
+    references: (string | Reference)[];
 }
