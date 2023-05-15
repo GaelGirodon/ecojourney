@@ -1,5 +1,6 @@
 import playwright from "playwright-core";
 import log from "../../util/log.js";
+import { pick } from "../../util/object.js";
 import * as units from "../../util/units.js";
 import { RequestArtifact, ResponseArtifact } from "./artifact.js";
 
@@ -9,13 +10,19 @@ import { RequestArtifact, ResponseArtifact } from "./artifact.js";
 export class ArtifactCollector {
 
     /** Collected requests */
-    private requests: RequestArtifact[] = [];
+    requests: RequestArtifact[] = [];
 
     /** Collected responses */
-    private responses: ResponseArtifact[] = [];
+    responses: ResponseArtifact[] = [];
+
+    /** Collected failed requests */
+    failedRequests: RequestArtifact[] = [];
+
+    /** Collected page errors */
+    errors: Error[] = [];
 
     /** Asynchronous tasks launched in event handlers */
-    private _asyncTasks: Promise<any>[] = [];
+    _asyncTasks: Promise<any>[] = [];
 
     /** Collect artifacts when true */
     enable = true;
@@ -28,6 +35,8 @@ export class ArtifactCollector {
     bind(page: playwright.Page) {
         page.on("request", request => this.collectRequest(request));
         page.on("response", response => this.collectResponse(response));
+        page.on("requestfailed", request => this.collectFailedRequest(request));
+        page.on("pageerror", error => this.collectError(error));
     }
 
     /**
@@ -61,10 +70,36 @@ export class ArtifactCollector {
         const bodyLength = [sizes?.responseBodySize, contentLength, body?.byteLength]
             .find(len => len && len > 0) ?? 0;
         const servedFromCache = response.request().timing().requestStart < 0;
-        log.debug("Collect response: %s => %d %s (%s)%s", response.url(),
-            response.status(), response.statusText(), units.bytes(bodyLength),
+        log.debug("Collect response: %s %s => %d %s (%s)%s",
+            response.request().method(), response.url(), response.status(),
+            response.statusText(), units.bytes(bodyLength),
             servedFromCache ? " [cache]" : "");
         this.responses.push({ response, body, bodyLength, servedFromCache });
+    }
+
+    /**
+     * Collect a browser failed request.
+     * @param request The browser failed request to collect
+     */
+    private collectFailedRequest(request: playwright.Request) {
+        if (!this.enable) {
+            return;
+        }
+        log.debug("Collect failed request: %s %s => %s", request.method(),
+            request.url(), request.failure()?.errorText);
+        this.failedRequests.push({ request });
+    }
+
+    /**
+     * Collect a page error.
+     * @param error The page error to collect
+     */
+    private collectError(error: Error): void {
+        if (!this.enable) {
+            return;
+        }
+        log.debug("Collect page error: %s", log.formatError(error));
+        this.errors.push(error);
     }
 
     /**
@@ -81,14 +116,13 @@ export class ArtifactCollector {
      * @returns Collected artifacts
      */
     dump() {
-        log.debug("Dump collected artifacts: %d requests, %d responses",
-            this.requests.length, this.responses.length);
-        const result = {
-            requests: this.requests,
-            responses: this.responses
-        };
+        const result = pick(this, ["requests", "responses", "failedRequests", "errors"]);
+        log.debug("Dump collected artifacts: %s", Object.entries(result)
+            .map(([k, v]) => `${v.length} ${k}`).join(", "));
         this.requests = [];
         this.responses = [];
+        this.failedRequests = [];
+        this.errors = [];
         return result;
     }
 

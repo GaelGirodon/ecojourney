@@ -6,8 +6,9 @@
 export function bytes(value: number) {
     const units = ["B", "kB", "MB", "GB", "TB"];
     let i = 0;
-    for (; value >= 1000 && i + 1 < units.length; i++, value /= 1000);
-    return `${round(value, 2)} ${units[i]}`;
+    let v = value;
+    for (; v >= 1000 && i + 1 < units.length; i++, v /= 1000);
+    return `${round(v, 2)} ${units[i]}`;
 }
 
 /**

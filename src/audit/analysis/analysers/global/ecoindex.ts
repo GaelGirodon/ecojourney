@@ -1,6 +1,9 @@
 /*
- * A porting of the ecoindex_python library
- * from https://github.com/cnumr/ecoindex_python
+ * An implementation of the EcoIndex calculation algorithm for internal use only
+ * (to avoid adding a dependency for a feature that fits in a single file),
+ * inspired by the following projects:
+ * - EcoIndex: https://github.com/cnumr/ecoindex_node (MIT License)
+ * - EcoIndex Python: https://github.com/cnumr/ecoindex_python (CC BY-NC-ND License)
  */
 
 /**

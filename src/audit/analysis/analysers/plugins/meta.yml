@@ -1,0 +1,17 @@
+id: plugins
+name: Plugins
+description: Check plugins
+metrics:
+  social-plugins-count:
+    id: social-plugins-count
+    name: Social plugins
+    description: The number of social plugin requests
+    order: 85
+    aggregation: sum
+rules:
+  avoid-social-plugin:
+    id: avoid-social-plugin
+    name: Avoid social plugin
+    description: Social network official plugins are usually heavy and intrusive,
+      replace them with basic links
+    references: [115bp#58-19]

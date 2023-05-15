@@ -93,8 +93,6 @@ export class Audit {
                 }
             }
             this.results = results;
-        } catch (error) {
-            throw error;
         } finally {
             await this.ctx.closeBrowser();
         }

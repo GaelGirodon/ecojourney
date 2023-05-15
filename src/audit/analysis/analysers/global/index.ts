@@ -23,6 +23,12 @@ const issuesFromMeasures = [
         rule: "reduce-dom-size",
         thresholds: [50, 500, 2500],
         details: (m: number) => `${m} elements`
+    },
+    {
+        measure: "domainsCount",
+        rule: "limit-domains-count",
+        thresholds: [3, 6, 12],
+        details: (m: number) => `${m} domains`
     }
 ];
 
@@ -38,8 +44,11 @@ export default class EcoIndexPageAnalyser extends PageAnalyser {
             responsesSize: responses
                 .map(r => r.bodyLength)
                 .reduce((sum, size) => sum + size, 0),
-            domCount: await page.frame.locator("*").count(),
-            redirectionsCount: redirections.length
+            domCount: await page.frame.locator("body *:not(script)").count(),
+            redirectionsCount: redirections.length,
+            domainsCount: page.requests
+                .map(r => new URL(r.request.url()).host)
+                .filter((h, i, array) => array.indexOf(h) === i).length
         };
         // Compute EcoIndex
         const ecoIndex = getEcoIndex(measures.domCount, measures.requestsCount,
@@ -53,7 +62,8 @@ export default class EcoIndexPageAnalyser extends PageAnalyser {
                 "eco-index": { value: ecoIndex.score },
                 "greenhouse-gases-emission": { value: ecoIndex.ges },
                 "water-consumption": { value: ecoIndex.water },
-                "redirections-count": { value: measures.redirectionsCount }
+                "redirections-count": { value: measures.redirectionsCount },
+                "domains-count": { value: measures.domainsCount }
             },
             issues: [
                 ...issuesFromMeasures

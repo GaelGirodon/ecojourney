@@ -154,7 +154,7 @@ export function aggregateResults(pages: PageResult[] = []): WebsiteResult {
     const websiteMeasures: Measure[] = [];          // All measures to collect then aggregate
     const websiteStats = new IssuesStatistics();    // Global statistics to aggregate
 
-    let scenarioId: string = "";                    // Current scenario id
+    let scenarioId = "";                            // Current scenario id
     let scenarioPages: PageAggregatedResult[] = []; // Scenario pages to collect
     let scenarioMeasures: Measure[] = [];           // Scenario measures to collect then aggregate
     let scenarioStats = new IssuesStatistics();     // Scenario statistics to aggregate
@@ -204,10 +204,10 @@ export function aggregateResults(pages: PageResult[] = []): WebsiteResult {
 export class IssuesStatistics {
 
     constructor(
-        public info: number = 0,
-        public minor: number = 0,
-        public major: number = 0,
-        public critical: number = 0
+        public info = 0,
+        public minor = 0,
+        public major = 0,
+        public critical = 0
     ) { }
 
     /**

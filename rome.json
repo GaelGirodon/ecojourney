@@ -14,7 +14,8 @@
         "noNonNullAssertion": "warn"
       },
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noRedeclare": "warn"
       }
     }
   }

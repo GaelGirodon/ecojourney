@@ -13,7 +13,6 @@ const thresholds = {
 export default class ScriptsPageAnalyser extends PageAnalyser {
 
     async analyse(page: PageArtifact) {
-        // Gather measures
         const extScripts = page.responses.filter(r => isScript(r));
         const extScriptsSize = extScripts.map(r => r.bodyLength)
             .reduce((sum, size) => sum + size, 0);
@@ -82,7 +81,10 @@ export default class ScriptsPageAnalyser extends PageAnalyser {
  * @returns true if the response is a script response
  */
 function isScript(res: ResponseArtifact) {
-    return res.bodyLength > 0 && res.response.status() < 300 && !res.servedFromCache
-        && (res.response.headers()["content-type"]?.includes("text/javascript")
-            || res.response.url()?.match(/\.m?js$/));
+    if (res.bodyLength <= 0 || res.response.status() >= 300 || res.servedFromCache) {
+        return false;
+    }
+    const contentType = res.response.headers()["content-type"];
+    return contentType?.includes("/javascript")
+        || !contentType && res.response.url()?.match(/\.m?js$/);
 }

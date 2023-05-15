@@ -742,6 +742,22 @@ Check cache headers
 | ------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | `configure-cache-headers` | Configure cache headers | Configure cache headers on static resources to enable HTTP caching (Cache-Control with a large max-age, ETag and Last-Modified) |
 
+### Compression (`compression`)
+
+Check compression
+
+#### Metrics
+
+| Id                            | Name                  | Description                                             |
+| ----------------------------- | --------------------- | ------------------------------------------------------- |
+| `compressible-requests-count` | Compressible requests | The number of requests that should be served compressed |
+
+#### Rules
+
+| Id                   | Name               | Description                                                                    |
+| -------------------- | ------------------ | ------------------------------------------------------------------------------ |
+| `enable-compression` | Enable compression | Configure HTTP compression to improve transfer speed and bandwidth utilisation |
+
 ### Cookies (`cookies`)
 
 Check cookies
@@ -753,30 +769,22 @@ Check cookies
 | `optimise-cookies`              | Optimise cookies size         | Optimise cookies size and remove them when they are useless |
 | `no-cookie-for-static-resource` | No cookie for static resource | Host static resource on a domain without cookie             |
 
-### EcoIndex (`ecoindex`)
+### Errors (`errors`)
 
-EcoIndex and related metrics calculation and analysis
+Check for request and page errors
 
 #### Metrics
 
-| Id                          | Name                | Description                      |
-| --------------------------- | ------------------- | -------------------------------- |
-| `eco-index`                 | EcoIndex            | The EcoIndex                     |
-| `requests-count`            | Requests            | The number of HTTP requests      |
-| `responses-size`            | Responses size      | The total size of HTTP responses |
-| `dom-elements-count`        | DOM elements        | The number of DOM elements       |
-| `greenhouse-gases-emission` | 🌫️ GhG emission      | The greenhouse gases emission    |
-| `water-consumption`         | 💧 Water consumption | The water consumption            |
-| `redirections-count`        | Redirections        | The number of HTTP redirections  |
+| Id                      | Name            | Description                   |
+| ----------------------- | --------------- | ----------------------------- |
+| `failed-requests-count` | Failed requests | The number of failed requests |
+| `errors-count`          | Errors          | The number of page errors     |
 
 #### Rules
 
-| Id                      | Name                  | Description                                                                          |
-| ----------------------- | --------------------- | ------------------------------------------------------------------------------------ |
-| `reduce-requests-count` | Reduce requests count | Reduce the number of requests                                                        |
-| `reduce-responses-size` | Reduce responses size | Reduce the responses size                                                            |
-| `reduce-dom-size`       | Reduce DOM size       | Reduce the number of elements in the DOM                                             |
-| `avoid-redirections`    | Avoid redirections    | Avoid redirections as they increase response time and resource consumption uselessly |
+| Id          | Name      | Description                                                  |
+| ----------- | --------- | ------------------------------------------------------------ |
+| `fix-error` | Fix error | Fix code or request error as it consumes resources uselessly |
 
 ### Fonts (`fonts`)
 
@@ -791,9 +799,36 @@ Check for fonts
 
 #### Rules
 
-| Id                   | Name               | Description                                       |
-| -------------------- | ------------------ | ------------------------------------------------- |
-| `use-standard-fonts` | Use standard fonts | Use fonts already pre-installed on user terminals |
+| Id                   | Name               | Description                                                                                                         |
+| -------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `use-standard-fonts` | Use standard fonts | Use fonts already pre-installed on user terminals to avoid additional downloads, or at least optimise external font |
+
+### Global (`global`)
+
+Global metrics calculation and analysis
+
+#### Metrics
+
+| Id                          | Name                | Description                      |
+| --------------------------- | ------------------- | -------------------------------- |
+| `eco-index`                 | EcoIndex            | The EcoIndex                     |
+| `requests-count`            | Requests            | The number of HTTP requests      |
+| `responses-size`            | Responses size      | The total size of HTTP responses |
+| `dom-elements-count`        | DOM elements        | The number of DOM elements       |
+| `greenhouse-gases-emission` | 🌫️ GhG emission      | The greenhouse gases emission    |
+| `water-consumption`         | 💧 Water consumption | The water consumption            |
+| `redirections-count`        | Redirections        | The number of HTTP redirections  |
+| `domains-count`             | Domains             | The number of domains            |
+
+#### Rules
+
+| Id                      | Name                  | Description                                                                          |
+| ----------------------- | --------------------- | ------------------------------------------------------------------------------------ |
+| `reduce-requests-count` | Reduce requests count | Reduce the number of requests                                                        |
+| `reduce-responses-size` | Reduce responses size | Reduce the responses size                                                            |
+| `reduce-dom-size`       | Reduce DOM size       | Reduce the page complexity (and thus the number of elements in the DOM)              |
+| `avoid-redirections`    | Avoid redirections    | Avoid redirections as they increase response time and resource consumption uselessly |
+| `limit-domains-count`   | Limit domains count   | Limit the number of domains serving resources                                        |
 
 ### Images (`images`)
 
@@ -810,11 +845,28 @@ Check images
 
 #### Rules
 
-| Id                        | Name                    | Description                                                                                                                                  |
-| ------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `optimise-image`          | Optimise image          | Replace raster images with CSS, font glyphs or vector images when possible, otherwise use the right format (WebP, AVIF, PNG) and compression |
-| `optimise-vector-image`   | Optimise vector image   | Optimise and minimise SVG images                                                                                                             |
-| `serve-right-sized-image` | Serve right-sized image | Serve pre-resized image instead of resizing browser-side                                                                                     |
+| Id                          | Name                      | Description                                                                                                                                  |
+| --------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `optimise-image`            | Optimise image            | Replace raster images with CSS, font glyphs or vector images when possible, otherwise use the right format (WebP, AVIF, PNG) and compression |
+| `optimise-vector-image`     | Optimise vector image     | Optimise and minimise SVG images                                                                                                             |
+| `serve-right-sized-image`   | Serve right-sized image   | Serve pre-resized image instead of resizing browser-side                                                                                     |
+| `load-only-displayed-image` | Load only displayed image | Load image only if it is displayed                                                                                                           |
+
+### Plugins (`plugins`)
+
+Check plugins
+
+#### Metrics
+
+| Id                     | Name           | Description                          |
+| ---------------------- | -------------- | ------------------------------------ |
+| `social-plugins-count` | Social plugins | The number of social plugin requests |
+
+#### Rules
+
+| Id                    | Name                | Description                                                                                    |
+| --------------------- | ------------------- | ---------------------------------------------------------------------------------------------- |
+| `avoid-social-plugin` | Avoid social plugin | Social network official plugins are usually heavy and intrusive, replace them with basic links |
 
 ### Scripts (`scripts`)
 
@@ -831,12 +883,12 @@ Check scripts
 
 #### Rules
 
-| Id                     | Name                 | Description                                        |
-| ---------------------- | -------------------- | -------------------------------------------------- |
-| `externalise-script`   | Externalise script   | Avoid embedding script into the HTML page          |
-| `minify-script`        | Minify script        | Reduce the size of the script by minifying JS code |
-| `reduce-scripts-count` | Reduce scripts count | Reduce the number of scripts                       |
-| `reduce-script-size`   | Reduce script size   | Reduce the size of the script                      |
+| Id                     | Name                 | Description                                                                                                                |
+| ---------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `externalise-script`   | Externalise script   | Avoid embedding script into the HTML page as it would be transferred each time the page is requested                       |
+| `minify-script`        | Minify script        | Reduce the size of the script by minifying JS code                                                                         |
+| `reduce-scripts-count` | Reduce scripts count | Reduce the number of scripts: combine them to reduce the number of requests                                                |
+| `reduce-script-size`   | Reduce script size   | Reduce the size of the script: use JS only when necessary, remove dead code using tree shaking, configure compression, ... |
 
 ### Style sheets (`stylesheets`)
 
@@ -853,13 +905,13 @@ Check style sheets
 
 #### Rules
 
-| Id                    | Name                | Description                                              |
-| --------------------- | ------------------- | -------------------------------------------------------- |
-| `externalise-style`   | Externalise style   | Avoid embedding style sheet into the HTML page           |
-| `minify-style`        | Minify style        | Reduce the size of the style sheet by minifying CSS code |
-| `provide-print-style` | Provide print style | Optimise styles for printing                             |
-| `reduce-styles-count` | Reduce styles count | Reduce the number of style sheets                        |
-| `reduce-style-size`   | Reduce style size   | Reduce the size of the style sheet                       |
+| Id                    | Name                | Description                                                                                               |
+| --------------------- | ------------------- | --------------------------------------------------------------------------------------------------------- |
+| `externalise-style`   | Externalise style   | Avoid embedding style sheet into the HTML page as it would be transferred each time the page is requested |
+| `minify-style`        | Minify style        | Reduce the size of the style sheet by minifying CSS code                                                  |
+| `provide-print-style` | Provide print style | Optimise styles for printing                                                                              |
+| `reduce-styles-count` | Reduce styles count | Reduce the number of style sheets to reduce the number of requests                                        |
+| `reduce-style-size`   | Reduce style size   | Reduce the size of the style sheet: optimise CSS, remove unused styles, configure compression, ...        |
 <!-- </analysers> -->
 
 ## License

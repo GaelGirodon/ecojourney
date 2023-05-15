@@ -12,20 +12,23 @@ const thresholds = {
     },
     vector: {
         size: [5, 50, 100].map(s => s * 1024)
+    },
+    hidden: {
+        minSize: 64 * 64
     }
 };
 
 export default class ImagesPageAnalyser extends PageAnalyser {
 
     async analyse(page: PageArtifact) {
-        // Gather measures
+        // Gather requests and measures
         const rasterImageRequests = page.responses.filter(r => isRasterImage(r));
         const rasterImageRequestsSize = rasterImageRequests.map(r => r.bodyLength)
             .reduce((sum, size) => sum + size, 0);
         const vectorImageRequests = page.responses.filter(r => isVectorImage(r));
         const vectorImageRequestsSize = vectorImageRequests.map(r => r.bodyLength)
             .reduce((sum, size) => sum + size, 0);
-        const displayedImages = await page.frame.evaluate(() =>
+        const domImages = await page.frame.evaluate(() =>
             ([...document.querySelectorAll("img:not([src^='data'])")] as HTMLImageElement[])
                 .map(img => ({
                     src: img.src,
@@ -57,12 +60,21 @@ export default class ImagesPageAnalyser extends PageAnalyser {
                         severity: IssueSeverity.fromThresholds(r.bodyLength, ...thresholds.vector.size),
                         details: `<a href="${r.response.url()}">${r.response.url()}</a> (${units.bytes(r.bodyLength)})`
                     })),
-                ...displayedImages
+                ...domImages
                     .filter(i => !i.src.endsWith(".svg") && i.resizeRatio > 0 && i.resizeRatio < 1)
                     .map(i => ({
                         id: "serve-right-sized-image",
                         severity: IssueSeverity.fromThresholds(1 - i.resizeRatio, ...thresholds.raster.resizeRatio),
-                        details: `<a href="${i.src}">${i.src}</a>`
+                        details: `<a href="${i.src}">${i.src}</a> resized from ${i.naturalWidth}x${i.naturalHeight
+                            } to ${i.clientWidth}x${i.clientHeight} (${Math.round(i.resizeRatio * 100)}%)`
+                    })),
+                ...domImages
+                    .filter(i => i.clientWidth * i.clientHeight === 0
+                        && i.naturalWidth * i.naturalHeight > thresholds.hidden.minSize)
+                    .map(i => ({
+                        id: "load-only-displayed-image",
+                        severity: IssueSeverity.Minor,
+                        details: `<a href="${i.src}">${i.src}</a> is downloaded but not displayed`
                     }))
             ]
         };
@@ -76,10 +88,12 @@ export default class ImagesPageAnalyser extends PageAnalyser {
  * @returns true if the response is a raster image response
  */
 function isRasterImage(res: ResponseArtifact) {
-    return res.bodyLength > 0 && res.response.status() < 300 && !res.servedFromCache
-        && (res.response.headers()["content-type"]?.startsWith("image/")
-            && !res.response.headers()["content-type"]?.startsWith("image/svg")
-            || res.response.url()?.match(/\.(avif|bmp|gif|ico|jpe?g|png|tiff|webp)$/));
+    if (res.bodyLength <= 0 || res.response.status() >= 300 || res.servedFromCache) {
+        return false;
+    }
+    const contentType = res.response.headers()["content-type"];
+    return contentType?.startsWith("image/") && !contentType?.startsWith("image/svg")
+        || !contentType && res.response.url()?.match(/\.(avif|bmp|gif|ico|jpe?g|png|tiff|webp)$/);
 }
 
 /**
@@ -88,9 +102,12 @@ function isRasterImage(res: ResponseArtifact) {
  * @returns true if the response is a vector image response
  */
 function isVectorImage(res: ResponseArtifact) {
-    return res.bodyLength > 0 && res.response.status() < 300 && !res.servedFromCache
-        && (res.response.headers()["content-type"]?.startsWith("image/svg")
-            || res.response.url()?.match(/\.svg$/));
+    if (res.bodyLength <= 0 || res.response.status() >= 300 || res.servedFromCache) {
+        return false;
+    }
+    const contentType = res.response.headers()["content-type"];
+    return contentType?.startsWith("image/svg")
+        || !contentType && res.response.url()?.match(/\.svg$/);
 }
 
 /**

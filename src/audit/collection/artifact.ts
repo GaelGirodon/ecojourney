@@ -17,6 +17,12 @@ export interface PageArtifact {
     /** Collected responses */
     readonly responses: ResponseArtifact[];
 
+    /** Collected failed requests */
+    readonly failedRequests: RequestArtifact[];
+
+    /** Collected page errors */
+    readonly errors: Error[];
+
     /** Page frame */
     readonly frame: Frame;
 

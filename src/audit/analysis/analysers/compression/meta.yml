@@ -1,0 +1,21 @@
+id: compression
+name: Compression
+description: Check compression
+metrics:
+  compressible-requests-count:
+    id: compressible-requests-count
+    name: Compressible requests
+    description: The number of requests that should be served compressed
+    order: 60
+    aggregation: sum
+rules:
+  enable-compression:
+    id: enable-compression
+    name: Enable compression
+    description: Configure HTTP compression to improve transfer speed
+      and bandwidth utilisation
+    references:
+      - 115bp#76-78
+      - 115bp#108-107
+      - name: Nginx HTTP server boilerplate configs
+        url: https://github.com/h5bp/server-configs-nginx

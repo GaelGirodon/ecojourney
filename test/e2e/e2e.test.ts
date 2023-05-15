@@ -41,15 +41,16 @@ describe(programName, () => {
         assert.equal(jsonReport.result?.scenarios?.length, 2);
         assert.equal(jsonReport.result?.scenarios?.[0]?.pages?.length, 3);
         assert.equal(jsonReport.result?.scenarios?.[1]?.pages?.length, 3);
-        assert.equal(jsonReport.result?.measures?.length, 21);
-        assert.deepEqual(jsonReport.result?.stats, { info: 47, minor: 19, major: 8, critical: 0 });
-        assert.equal(Object.keys(jsonReport.metrics).length, 21);
-        assert.equal(Object.keys(jsonReport.rules).length, 20);
-        assert.equal(jsonReport.result.scenarios
+        assert.equal(jsonReport.result?.measures?.length, 26);
+        assert.deepEqual(jsonReport.result?.stats, { info: 46, minor: 32, major: 7, critical: 0 });
+        assert.equal(Object.keys(jsonReport.metrics).length, 26);
+        assert.equal(Object.keys(jsonReport.rules).length, 25);
+        assert.deepEqual(jsonReport.result.scenarios
             .flatMap((s: ScenarioResult) => s.pages.flatMap(p => p.issues))
             .map((i: Rule) => i.id)
-            .filter((id: RuleId, i: number, all: RuleId[]) => all.indexOf(id) === i).length,
-            Object.keys(jsonReport.rules).length);
+            .filter((id: RuleId, i: number, all: RuleId[]) => all.indexOf(id) === i)
+            .sort(),
+            Object.keys(jsonReport.rules).sort());
     });
 
     after((done) => stub.close(done));

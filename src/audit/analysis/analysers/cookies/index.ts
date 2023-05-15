@@ -1,3 +1,4 @@
+import { groupReduce } from "../../../../util/object.js";
 import * as units from "../../../../util/units.js";
 import { PageArtifact } from "../../../collection/artifact.js";
 import { IssueSeverity } from "../../issue.js";
@@ -17,23 +18,17 @@ export default class CookiesPageAnalyser extends PageAnalyser {
             .map(r => r.response.request().allHeaders()
                 .then(h => ({ ...r, cookie: h["cookie"] })))))
             .filter(r => r.cookie);
-        const cookies = requests.map(r => r.cookie)
-            .reduce((cookies: { [cookie: string]: { requests: number, names: string[] } }, cookie) => {
-                cookies[cookie] = {
-                    requests: (cookies[cookie]?.requests ?? 0) + 1,
-                    names: cookies[cookie]?.names ?? cookie.split(";")
-                        .map(c => c.split("=")[0].trim())
-                };
-                return cookies;
-            }, {});
+        const requestsByCookie = groupReduce(requests.map(r => r.cookie),
+            c => c, () => 0, (requests: number) => requests + 1);
 
         return {
             issues: [
-                ...Object.entries(cookies).map(([cookie, c]) => ({
+                ...Object.entries(requestsByCookie).map(([cookie, requests]) => ({
                     id: "optimise-cookies",
                     severity: IssueSeverity.fromThresholds(cookie.length, ...thresholds.length.slice(1)),
-                    details: `${c.names.map(n => `<code>${n}</code>`).join(" ")} (${units.bytes(cookie.length)})`,
-                    occurrences: cookie.length < thresholds.length[0] ? 0 : c.requests
+                    details: `${cookie.split(";").map(c => `<code>${c.split("=")[0]?.trim()}</code>`).join(" ")
+                        } (${units.bytes(cookie.length)})`,
+                    occurrences: cookie.length < thresholds.length[0] ? 0 : requests
                 })),
                 ...requests
                     .filter(r => isStatic(r))

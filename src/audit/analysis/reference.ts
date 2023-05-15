@@ -14,15 +14,15 @@ export class Reference {
 
     /**
      * Expand a reference shortcut notation.
-     * @param id Reference shortcut notation
+     * @param ref Reference shortcut notation
      * @returns The reference
      */
-    static expand(id: string | Reference): Reference {
-        if (typeof id !== "string") {
-            return id;
+    static expand(ref: string | Reference): Reference {
+        if (typeof ref !== "string") {
+            return ref;
         }
-        const source = id.split("#")[0];
-        return sources[source]?.expand(id);
+        const source = ref.split("#")[0];
+        return sources[source]?.expand(ref);
     }
 
 }
@@ -34,10 +34,10 @@ export interface ReferenceSource {
 
     /**
      * Expand a reference shortcut notation.
-     * @param id Reference shortcut notation
+     * @param ref Reference shortcut notation
      * @returns The reference
      */
-    expand(id: string | Reference): Reference;
+    expand(ref: string | Reference): Reference;
 
 }
 
@@ -49,11 +49,22 @@ class WebEcoDesignBestPracticesReferenceSource implements ReferenceSource {
     /**
      * @inheritdoc
      */
-    expand(id: string | Reference): Reference {
-        if (typeof id !== "string") {
-            return id;
+    expand(ref: string | Reference): Reference {
+        if (typeof ref !== "string") {
+            return ref;
         }
-        return new Reference(id, `115 Best Practices #${id.split("#")[1]}`)
+        const segments = ref.split("#");
+        if (segments.length <= 1) {
+            return new Reference(ref, "115 Best Practices",
+                "https://github.com/cnumr/best-practices");
+        }
+        const ids = segments[1].split("-");
+        if (ids.length <= 1) {
+            return new Reference(ref, `115 Best Practices #${ids[0]}`);
+        }
+        const id = ids[1].padStart(3, "0");
+        const url = `https://github.com/cnumr/best-practices/blob/main/chapters/BP_${id}_fr.md`;
+        return new Reference(ref, `115 Best Practices #${ids[0]}`, url);
     }
 
 }

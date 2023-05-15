@@ -4,6 +4,7 @@ import { IssueSeverity } from "../../issue.js";
 import { PageAnalyser } from "../analyser.js";
 import { isMinified } from "../util.js";
 
+/** Severity thresholds per measure */
 const thresholds = {
     count: [3, 6, 12],
     size: [5, 50, 500].map(s => s * 1024)
@@ -89,7 +90,10 @@ export default class StylesheetsPageAnalyser extends PageAnalyser {
  * @returns true if the response is a style sheet response
  */
 function isStyle(res: ResponseArtifact) {
-    return res.bodyLength > 0 && res.response.status() < 300 && !res.servedFromCache
-        && (res.response.headers()["content-type"]?.includes("text/css")
-            || res.response.url()?.match(/\.css$/));
+    if (res.bodyLength <= 0 || res.response.status() >= 300 || res.servedFromCache) {
+        return false;
+    }
+    const contentType = res.response.headers()["content-type"];
+    return contentType?.includes("text/css")
+        || !contentType && res.response.url()?.match(/\.css$/);
 }

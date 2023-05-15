@@ -8,8 +8,6 @@ export abstract class Action {
     /** Action arguments from the parent procedure */
     public args: ActionArguments = {};
 
-    constructor() { };
-
     /**
      * Run the action on the given context.
      * @param _ctx The context

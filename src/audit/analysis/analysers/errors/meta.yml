@@ -1,0 +1,22 @@
+id: errors
+name: Errors
+description: Check for request and page errors
+metrics:
+  failed-requests-count:
+    id: failed-requests-count
+    name: Failed requests
+    description: The number of failed requests
+    order: 55
+    aggregation: sum
+  errors-count:
+    id: errors-count
+    name: Errors
+    description: The number of page errors
+    order: 55
+    aggregation: sum
+rules:
+  fix-error:
+    id: fix-error
+    name: Fix error
+    description: Fix code or request error as it consumes resources uselessly
+    references: [115bp#26-4032, 115bp#42-46, 115bp#60-31]

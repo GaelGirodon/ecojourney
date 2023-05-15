@@ -3,10 +3,9 @@ import { PageArtifact, ResponseArtifact } from "../../../collection/artifact.js"
 import { IssueSeverity } from "../../issue.js";
 import { PageAnalyser } from "../analyser.js";
 
-/** Severity thresholds per measure */
+/** Severity thresholds */
 const thresholds = {
-    size: [5, 50, 500].map(s => s * 1024),
-    count: [1, 5, 10]
+    size: [5, 50, 500].map(s => s * 1024)
 };
 
 export default class FontsPageAnalyser extends PageAnalyser {
@@ -38,7 +37,10 @@ export default class FontsPageAnalyser extends PageAnalyser {
  * @returns true if the response is a font response
  */
 function isFont(res: ResponseArtifact) {
-    return res.bodyLength > 0 && res.response.status() < 300 && !res.servedFromCache
-        && (res.response.headers()["content-type"]?.includes("font")
-            || res.response.url()?.match(/\.(ttf|otf|woff2?)$/));
+    if (res.bodyLength <= 0 || res.response.status() >= 300 || res.servedFromCache) {
+        return false;
+    }
+    const contentType = res.response.headers()["content-type"];
+    return contentType?.includes("font")
+        || !contentType && res.response.url()?.match(/\.(ttf|otf|woff2?)$/);
 }

@@ -1,31 +1,31 @@
-id: ecoindex
-name: EcoIndex
-description: EcoIndex and related metrics calculation and analysis
+id: global
+name: Global
+description: Global metrics calculation and analysis
 metrics:
   requests-count:
     id: requests-count
     name: Requests
     description: The number of HTTP requests
-    order: 10
+    order: 1
     aggregation: sum
   responses-size:
     id: responses-size
     name: Responses size
     description: The total size of HTTP responses
-    order: 11
+    order: 2
     unit: byte
     aggregation: sum
   dom-elements-count:
     id: dom-elements-count
     name: DOM elements
     description: The number of DOM elements
-    order: 12
+    order: 3
     aggregation: sum
   eco-index:
     id: eco-index
     name: EcoIndex
     description: The EcoIndex
-    order: 1
+    order: 0
     unit: integer
     aggregation: avg
     grade: [80, 70, 55, 40, 25, 10]
@@ -47,24 +47,37 @@ metrics:
     id: redirections-count
     name: Redirections
     description: The number of HTTP redirections
-    order: 50
+    order: 51
+    aggregation: sum
+  domains-count:
+    id: domains-count
+    name: Domains
+    description: The number of domains
+    order: 51
     aggregation: sum
 rules:
   reduce-requests-count:
     id: reduce-requests-count
     name: Reduce requests count
     description: Reduce the number of requests
-    references: [115bp#25, 115bp#46]
+    references: [115bp, 115bp#21-4022, 115bp#25-4033, 115bp#46-9]
   reduce-responses-size:
     id: reduce-responses-size
     name: Reduce responses size
     description: Reduce the responses size
+    references: [115bp]
   reduce-dom-size:
     id: reduce-dom-size
     name: Reduce DOM size
-    description: Reduce the number of elements in the DOM
+    description: Reduce the page complexity (and thus the number of elements in the DOM)
+    references: [115bp]
   avoid-redirections:
     id: avoid-redirections
     name: Avoid redirections
     description: Avoid redirections as they increase response time and resource consumption uselessly
-    references: [115bp#112]
+    references: [115bp#83-84, 115bp#112-95]
+  limit-domains-count:
+    id: limit-domains-count
+    name: Limit domains count
+    description: Limit the number of domains serving resources
+    references: [115bp#81-18]

@@ -7,4 +7,8 @@ rules:
     name: Configure cache headers
     description: Configure cache headers on static resources to enable HTTP caching
       (Cache-Control with a large max-age, ETag and Last-Modified)
-    references: [115bp#73, 115bp#74]
+    references:
+      - 115bp#73-99
+      - 115bp#74-101
+      - name: Nginx HTTP server boilerplate configs
+        url: https://github.com/h5bp/server-configs-nginx

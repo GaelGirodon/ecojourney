@@ -6,9 +6,9 @@ rules:
     id: optimise-cookies
     name: Optimise cookies size
     description: Optimise cookies size and remove them when they are useless
-    references: [115bp#61]
+    references: [115bp#61-82]
   no-cookie-for-static-resource:
     id: no-cookie-for-static-resource
     name: No cookie for static resource
     description: Host static resource on a domain without cookie
-    references: [115bp#80]
+    references: [115bp#80-94]

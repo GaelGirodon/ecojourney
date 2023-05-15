@@ -14,9 +14,12 @@
     .then(res => console.log(`Fetched ${res.length} requests`));
 </script>
 
-<script>/* Too     */</script>
-<script>/* much    */</script>
-<script>/* scripts */</script>
-<script>/* ...     */</script>
+<script>
+  fetch("/?fake=https://platform.linkedin.com/in.js"); // Fake a social plugin download
+  fetch("/not-found.html"); // "Successful" request but with a 404 status
+  fetch("http://localhost:9998"); // A failed request on a different hostname:port
+  fetch("http://localhost:9999"); // Another failed request on a different hostname:port
+  throw new Error("An error to fix in the source code");
+</script>
 
 <%- include("footer"); -%>

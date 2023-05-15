@@ -6,46 +6,51 @@ metrics:
     id: external-scripts-count
     name: External scripts
     description: The number of external scripts
-    order: 65
+    order: 70
     aggregation: sum
   external-scripts-size:
     id: external-scripts-size
     name: External scripts size
     description: The total size of external scripts
-    order: 65
+    order: 70
     unit: byte
     aggregation: sum
   embedded-scripts-count:
     id: embedded-scripts-count
     name: Embedded scripts
     description: The number of embedded scripts
-    order: 65
+    order: 70
     aggregation: sum
   embedded-scripts-size:
     id: embedded-scripts-size
     name: Embedded scripts size
     description: The total size of embedded scripts
-    order: 65
+    order: 70
     unit: byte
     aggregation: sum
 rules:
   externalise-script:
     id: externalise-script
     name: Externalise script
-    description: Avoid embedding script into the HTML page
-    references: [115bp#41]
+    description: Avoid embedding script into the HTML page as it would be
+      transferred each time the page is requested
+    references: [115bp#41-32]
   minify-script:
     id: minify-script
     name: Minify script
     description: Reduce the size of the script by minifying JS code
-    references: [115bp#77]
+    references: [115bp#77-77]
   reduce-scripts-count:
     id: reduce-scripts-count
     name: Reduce scripts count
-    description: Reduce the number of scripts
-    references: [115bp#35, 115bp#75]
+    description: >-
+      Reduce the number of scripts: combine them to reduce
+      the number of requests
+    references: [115bp#75-79]
   reduce-script-size:
     id: reduce-script-size
     name: Reduce script size
-    description: Reduce the size of the script
-    references: [115bp#15, 115bp#77]
+    description: >-
+      Reduce the size of the script: use JS only when necessary, remove dead
+      code using tree shaking, configure compression, ...
+    references: [115bp#9-39, 115bp#15-40, 115bp#76-78, 115bp#77-77]
