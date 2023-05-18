@@ -28,7 +28,7 @@ export interface ReportData {
 /**
  * Report format
  */
-export type ReportFormat = "html" | "json";
+export type ReportFormat = "html" | "json" | "influxdb";
 
 /**
  * A report generator

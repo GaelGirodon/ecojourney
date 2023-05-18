@@ -3,6 +3,13 @@ name: Sample website
 description: A sample website for E2E testing
 url: http://localhost:3000
 
+config:
+  influxdb:
+    url: http://localhost:3000/influxdb
+    token: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    org: my-org
+    bucket: my-bucket
+
 procedures:
   # Log a user in using the login form page
   login:

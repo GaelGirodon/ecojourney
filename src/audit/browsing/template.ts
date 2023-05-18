@@ -1,5 +1,6 @@
 import ejs from "ejs";
 import log from "../../util/log.js";
+import { isObject } from "../../util/object.js";
 
 /**
  * Render a value template with the given data.
@@ -26,10 +27,12 @@ export function renderObject(value: { [key: string]: any }, data: ejs.Data) {
     const output = Object.assign({}, value);
     for (const key of Object.keys(value)) {
         const v = value[key];
-        if (v?.constructor.name === "Object") {
+        if (isObject(v)) {
             output[key] = renderObject(v, data);
         } else if (typeof v === "string" || v instanceof String) {
             output[key] = render(v as string, data);
+        } else {
+            output[key] = v;
         }
     }
     return output;

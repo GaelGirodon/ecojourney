@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { format as _ } from "node:util";
+import { programName as pn } from "../meta.js";
 import { Config, loadConfig, parseHttpHeaders } from "./config.js";
 
 describe("config", () => {
@@ -15,18 +16,20 @@ describe("config", () => {
             const fromManifest: Config = {
                 device: "Nexus 10",
                 headers: { "H1": "1", "H3": "3" },
+                proxy: { server: "myproxy.com:3128" },
                 retries: 3,
-                proxy: { server: "myproxy.com:3128" }
+                influxdb: { url: "url" }
             } as any;
             assert.deepEqual(await loadConfig(fromCli, fromManifest), {
                 browser: "chromium", // Default
                 headless: false, // CLI overrides default
                 device: "Galaxy S8", // CLI overrides manifest
                 headers: { "H1": "A", "H2": "B", "H3": "3" }, // CLI merges with manifest
+                proxy: { server: "myproxy.com:3128" }, // Manifest only
                 retries: 3, // Manifest overrides default
                 output: ".", // Default
-                formats: ["html", "json"], // Default,
-                proxy: { server: "myproxy.com:3128" }, // Manifest only
+                formats: ["html", "json"], // Default
+                influxdb: { url: "url", prefix: `${pn}_` }, // Manifest merges with default
                 dryRun: true, // CLI overrides default
                 verbose: true // CLI overrides default
             });

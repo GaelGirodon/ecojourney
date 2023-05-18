@@ -17,7 +17,7 @@ export async function jsonReport(data: ReportData) {
         ...pick(data.manifest, ["name", "description", "url"]),
         config: pick(data.config, ["browser", "headless", "device", "dryRun"]),
         ...pick(data, ["result", "metrics", "rules"])
-    }, undefined, 2);
+    });
     await writeFile(output, content, { encoding: "utf8" });
     return output;
 }

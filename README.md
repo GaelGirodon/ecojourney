@@ -307,36 +307,48 @@ config:
   headless: true
   device: "Galaxy S8"
   headers: {"X-User":"user"}
-  timeout: 10000
-  retries: 3
-  output: "./reports/"
-  formats: ["html"]
   proxy:
     server: "http://myproxy.com:3128"
     bypass: ".com, chromium.org, .domain.com"
     username: "username"
     password: "password"
+  timeout: 10000
+  retries: 3
+  output: "./reports/"
+  formats: ["html"]
+  influxdb:
+    url: "http://localhost:8086"
+    token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    org: "my-org"
+    bucket: "my-bucket"
+    prefix: "eco_"
   dryRun: true
   verbose: true
 ```
 
-| Name         | Description                                                      | Type      | Default     | Values                                              |
-| ------------ | ---------------------------------------------------------------- | --------- | ----------- | --------------------------------------------------- |
-| `browser`    | Browser to run the audit with                                    | `string`  | `chromium`  | `msedge`, `chrome`, `chromium`, `firefox`, `webkit` |
-| `headless`   | Run browser in headless mode                                     | `boolean` | `true`      |                                                     |
-| `device`     | Simulate browser behavior for a specific device                  | `string`  |             |                                                     |
-| `headers`    | Additional HTTP headers to be sent with every request            | `object`  |             |                                                     |
-| `timeout`    | Maximum time to wait for navigations or actions, in milliseconds | `integer` |             |                                                     |
-| `retries`    | Number of retries in case of failure                             | `integer` | `0`         |                                                     |
-| `output`     | Directory to write reports to                                    | `string`  | `.`         |                                                     |
-| `formats`    | Output report formats                                            | `array`   | `html,json` | `html`, `json`                                      |
-| `proxy`      | Network proxy settings                                           | `object`  |             |                                                     |
-| ∟ `server`   | Proxy to be used for all requests                                | `string`  |             |
-| ∟ `bypass`   | Comma-separated domains to bypass proxy                          | `string`  |             |
-| ∟ `username` | Username to use if HTTP proxy requires authentication            | `string`  |             |
-| ∟ `password` | Password to use if HTTP proxy requires authentication            | `string`  |             |
-| `dryRun`     | Simulate the audit without actually running the browser          | `boolean` | `false`     |                                                     |
-| `verbose`    | Enable verbose output                                            | `boolean` | `false`     |                                                     |
+| Name         | Description                                                      | Type      | Default       | Values                                              |
+| ------------ | ---------------------------------------------------------------- | --------- | ------------- | --------------------------------------------------- |
+| `browser`    | Browser to run the audit with                                    | `string`  | `chromium`    | `msedge`, `chrome`, `chromium`, `firefox`, `webkit` |
+| `headless`   | Run browser in headless mode                                     | `boolean` | `true`        |                                                     |
+| `device`     | Simulate browser behavior for a specific device                  | `string`  |               |                                                     |
+| `headers`    | Additional HTTP headers to be sent with every request            | `object`  |               |                                                     |
+| `proxy`      | Network proxy settings                                           | `object`  |               |                                                     |
+| ∟ `server`   | Proxy to be used for all requests                                | `string`  |               |                                                     |
+| ∟ `bypass`   | Comma-separated domains to bypass proxy                          | `string`  |               |                                                     |
+| ∟ `username` | Username to use if HTTP proxy requires authentication            | `string`  |               |                                                     |
+| ∟ `password` | Password to use if HTTP proxy requires authentication            | `string`  |               |                                                     |
+| `timeout`    | Maximum time to wait for navigations or actions, in milliseconds | `integer` |               |                                                     |
+| `retries`    | Number of retries in case of failure                             | `integer` | `0`           |                                                     |
+| `output`     | Directory to write reports to                                    | `string`  | `.`           |                                                     |
+| `formats`    | Output report formats                                            | `array`   | `html,json`   | `html`, `json`, `influxdb`                          |
+| `influxdb`   | InfluxDB connection configuration                                | `object`  |               |                                                     |
+| ∟ `url`      | Base URL                                                         | `string`  |               |                                                     |
+| ∟ `token`    | Authentication token                                             | `string`  |               |                                                     |
+| ∟ `org`      | Destination organisation for writes                              | `string`  |               |                                                     |
+| ∟ `bucket`   | Destination bucket for writes                                    | `string`  |               |                                                     |
+| ∟ `prefix`   | Measurement name prefix                                          | `string`  | `ecojourney_` |                                                     |
+| `dryRun`     | Simulate the audit without actually running the browser          | `boolean` | `false`       |                                                     |
+| `verbose`    | Enable verbose output                                            | `boolean` | `false`       |                                                     |
 
 #### Actions
 
@@ -688,10 +700,36 @@ Audit results can be exported using various report formats that can be specified
 using the `formats` CLI flag, environment variable or manifest configuration
 key.
 
-| Format | Description                                                                                                |
-| ------ | ---------------------------------------------------------------------------------------------------------- |
-| `html` | Export analysis results to an HTML report file<br>→ Recommended for simple analysis result visualisation   |
-| `json` | Export analysis results to a JSON report file<br>→ Recommended for further data analysis and visualisation |
+#### HTML
+
+Export analysis results to an HTML report file.
+
+➡️ Recommended for simple analysis result visualisation
+
+#### JSON
+
+Export analysis results to a JSON report file.
+
+➡️ Recommended for further data analysis and visualisation
+
+#### InfluxDB
+
+Write analysis results to an InfluxDB time-series database via 2 measurements:
+
+- `{prefix}issues`: number of issues by severity for each audit, scenario and
+  page, with analysis duration
+- `{prefix}measure`: main metrics for each audit, scenario and page
+
+Published data is more or less the same as the data visible on the HTML report
+without opening collapsible elements, thus, some data (issues list, secondary
+measures, rules and metrics list, etc.) are not written because they doesn't fit
+well in a TSDB or are not relevant enough to be worth tracking on a dashboard.
+
+➡️ Recommended to keep track of analysis results over time on a Grafana
+dashboard
+
+✔️ Don't forget to set a retention time for the target bucket to enable
+automatic deletion of old data.
 
 ### Continuous Integration
 

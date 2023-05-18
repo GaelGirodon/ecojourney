@@ -47,6 +47,11 @@ app.get("/:page(\\w+)", (req, res) => {
     res.render(page, { page, title, query: req.query });
 });
 
+// InfluxDB API stub
+app.post("/influxdb/api/v2/write", (_, res) => {
+    res.json({});
+});
+
 /**
  * Start the stub server
  * @returns The stub server

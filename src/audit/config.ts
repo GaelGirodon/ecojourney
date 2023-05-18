@@ -1,7 +1,10 @@
 import { InvalidArgumentError } from "commander";
 import { stat } from "node:fs/promises";
 import { devices, LaunchOptions } from "playwright-core";
+import { programName } from "../meta.js";
+import { merge } from "../util/object.js";
 import { renderObject } from "./browsing/template.js";
+import { InfluxDBConfig } from "./report/influxdb/config.js";
 import { ReportFormat } from "./report/model.js";
 
 /**
@@ -21,6 +24,9 @@ export interface Config {
     /** Additional HTTP headers to be sent with every request */
     headers?: HttpHeaders;
 
+    /** Network proxy settings */
+    proxy?: LaunchOptions["proxy"];
+
     /** Maximum time to wait for navigations or actions, in milliseconds */
     timeout?: number;
 
@@ -33,8 +39,8 @@ export interface Config {
     /** Output report formats */
     formats: ReportFormat[];
 
-    /** Network proxy settings */
-    proxy?: LaunchOptions["proxy"];
+    /** InfluxDB connection configuration */
+    influxdb?: InfluxDBConfig;
 
     /** Simulate the audit without actually running the browser */
     dryRun: boolean;
@@ -45,14 +51,24 @@ export interface Config {
 }
 
 /**
+ * Default audit configuration allows some missing fields.
+ */
+type DefaultConfig = Config | {
+    influxdb?: Partial<InfluxDBConfig>
+};
+
+/**
  * Default audit configuration
  */
-export const defaultConfig: Config = {
+export const defaultConfig: DefaultConfig = {
     browser: "chromium",
     headless: true,
     retries: 0,
     output: ".",
     formats: ["html", "json"],
+    influxdb: {
+        prefix: `${programName}_`
+    },
     dryRun: false,
     verbose: false
 };
@@ -66,21 +82,12 @@ export const defaultConfig: Config = {
  */
 export async function loadConfig(fromCli: Config, fromManifest: Config) {
     // Merge configuration
-    let config = Object.assign({}, defaultConfig, fromManifest, fromCli);
-    config.headers = Object.assign({}, ...[fromManifest, fromCli]
-        .map(c => c.headers).filter(c => c));
+    let config = merge(defaultConfig, fromManifest, fromCli);
     // Render templates
     config = renderObject(config, { env: process.env }) as Config;
     // Device
     if (config.device && !(config.device in devices)) {
         throw new Error(`Unknown device '${config.device}'`);
-    }
-    // Output
-    if (!(await stat(config.output).catch((cause) => {
-        throw new Error(`Output report directory '${config.output}' doesn't exist`,
-            { cause });
-    })).isDirectory()) {
-        throw new Error(`Output report path '${config.output}' must be a directory`);
     }
     // Timeout
     if (config.timeout && (config.timeout < 0 || config.timeout > 600000)) {
@@ -89,6 +96,17 @@ export async function loadConfig(fromCli: Config, fromManifest: Config) {
     // Retries
     if (config.retries < 0 || config.retries > 100) {
         throw new Error(`Invalid number of retries '${config.retries}'`);
+    }
+    // Output
+    if (!(await stat(config.output).catch((cause) => {
+        throw new Error(`Output report directory '${config.output}' doesn't exist`,
+            { cause });
+    })).isDirectory()) {
+        throw new Error(`Output report path '${config.output}' must be a directory`);
+    }
+    // InfluxDB
+    if (config.formats.includes("influxdb") && !config.influxdb?.url) {
+        throw new Error(`InfluxDB connection configuration is required for report format 'influxdb'`);
     }
     // Verbose
     if (config.verbose) {

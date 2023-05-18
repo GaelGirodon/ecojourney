@@ -39,6 +39,12 @@ export interface AggregatedResult {
     /** Number of issues per severity */
     readonly stats: IssuesStatistics;
 
+    /** Time at which the analysis started */
+    readonly startTime: Date;
+
+    /** Time at which the analysis ended */
+    readonly endTime: Date;
+
 }
 
 /**
@@ -66,9 +72,6 @@ export interface ScenarioResult extends Scenario, AggregatedResult {
  */
 export class Scenario {
 
-    /** Time at which the scenario was created */
-    readonly time: Date;
-
     constructor(
         /** The scenario index */
         readonly index: number = -1,
@@ -76,9 +79,7 @@ export class Scenario {
         readonly name: string = "",
         /** Exclude this scenario from analysis */
         readonly exclude: boolean = false
-    ) {
-        this.time = new Date();
-    }
+    ) { }
 
     /**
      * The scenario unique identifier
@@ -90,7 +91,7 @@ export class Scenario {
     /**
      * @returns The object to serialize as JSON
      */
-    public toJSON() {
+    toJSON() {
         return omit(this, ["exclude"]);
     }
 
@@ -106,9 +107,6 @@ export type PageAggregatedResult = PageResult & AggregatedResult;
  */
 export class PageResult {
 
-    /** Time at which the page result was created */
-    readonly time: Date;
-
     constructor(
         /** The browsing scenario */
         readonly scenario: Scenario = new Scenario(),
@@ -120,13 +118,15 @@ export class PageResult {
         readonly url: string = "",
         /** The page title */
         readonly title: string = "",
+        /** Time at which the navigation to this page started */
+        readonly startTime: Date = new Date(),
+        /** Time at which the page analysis ended */
+        readonly endTime: Date = new Date(),
         /** Page measures */
         readonly measures: Measure[] = [],
         /** Page issues */
         readonly issues: Issue[] = []
-    ) {
-        this.time = new Date();
-    }
+    ) { }
 
     /**
      * The page unique identifier
@@ -138,7 +138,7 @@ export class PageResult {
     /**
      * @returns The object to serialize as JSON
      */
-    public toJSON() {
+    toJSON() {
         return omit(this, ["scenario"]);
     }
 
@@ -179,7 +179,9 @@ export function aggregateResults(pages: PageResult[] = []): WebsiteResult {
                 ...scenarioPages[0].scenario,
                 pages: scenarioPages,
                 measures: aggregateMeasures(scenarioMeasures),
-                stats: scenarioStats
+                stats: scenarioStats,
+                startTime: scenarioPages[0].startTime,
+                endTime: scenarioPages[scenarioPages.length - 1].endTime
             }));
             websiteMeasures.push(...scenarioMeasures);
             websiteStats.add(scenarioStats);
@@ -194,7 +196,9 @@ export function aggregateResults(pages: PageResult[] = []): WebsiteResult {
     return {
         scenarios,
         measures: aggregateMeasures(websiteMeasures),
-        stats: websiteStats
+        stats: websiteStats,
+        startTime: pages.length > 0 ? pages[0].startTime : new Date(),
+        endTime: pages.length > 0 ? pages[pages.length - 1].endTime : new Date()
     };
 }
 

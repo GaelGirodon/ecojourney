@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import sinon from "sinon";
-import { defaultConfig } from "../config.js";
+import { Config, defaultConfig } from "../config.js";
 import { Context } from "../context.js";
 import { Action } from "./action.js";
 import { ClickAction } from "./actions/click.js";
@@ -27,7 +27,7 @@ describe("ActionIterator", () => {
             fake(new WaitAction({ selector: ".profile" })),
             fake(new PageAction({ selector: "Profile page" }))
         ]);
-        const ctx = new Context(defaultConfig, []);
+        const ctx = new Context(defaultConfig as Config, []);
         let i = 0;
         while (iterator.hasNext() && i++ < 10) {
             await iterator.runNext(ctx);

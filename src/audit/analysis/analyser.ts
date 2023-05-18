@@ -30,24 +30,23 @@ export class Analyser {
      * @returns Page analysis result (or undefined if this page must be ignored)
      */
     async analyse(page: PageArtifact, scenario: Scenario) {
-        const result = new PageResult(scenario, page.index, page.name,
-            page.frame.url(), await page.frame.title());
-        log.info("Analyse page '%s' (%s)", result.title, result.url);
+        log.info("Analyse page '%s' (%s)", page.name, page.frame.url());
+        const measures: Measure[] = [];
+        const issues: Issue[] = [];
         for (const pa of this.analysers) {
             log.debug("Run page analyser %s (%s)", pa.metadata.name, pa.metadata.id);
-            const paResult = await pa.analyse(page);
-            for (const [id, measure] of Object.entries(paResult.measures || {})) {
-                result.measures.push(new Measure(this.metrics[id]!, measure));
+            const result = await pa.analyse(page);
+            for (const [id, measure] of Object.entries(result.measures || {})) {
+                measures.push(new Measure(this.metrics[id]!, measure));
             }
-            for (const issue of paResult.issues?.filter(i => i.occurrences !== 0) || []) {
-                result.issues.push(new Issue(this.rules[issue.id]!, issue));
+            for (const issue of result.issues?.filter(i => i.occurrences !== 0) || []) {
+                issues.push(new Issue(this.rules[issue.id]!, issue));
             }
         }
-        result.measures.sort(Measure.compare);
-        result.issues.sort(Issue.compare);
-        log.info("Page analysed: %d measures, %d issues",
-            result.measures.length, result.issues.length);
-        return result;
+        log.info("Page analysed: %d measures, %d issues", measures.length, issues.length);
+        return new PageResult(scenario, page.index, page.name, page.frame.url(),
+            await page.frame.title(), page.startTime, new Date(),
+            measures.sort(Measure.compare), issues.sort(Issue.compare));
     }
 
     /**

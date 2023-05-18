@@ -23,7 +23,7 @@ export class Issue {
     /**
      * @returns The object to serialize as JSON
      */
-    public toJSON() {
+    toJSON() {
         return { ...this.rule, ...this.data };
     }
 

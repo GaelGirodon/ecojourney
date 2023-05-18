@@ -59,6 +59,39 @@
           },
           "additionalProperties": false
         },
+        "proxy": {
+          "title": "Proxy",
+          "description": "Network proxy settings",
+          "type": "object",
+          "properties": {
+            "server": {
+              "title": "Server",
+              "description": "Proxy to be used for all requests",
+              "type": "string",
+              "example": "http://myproxy.com:3128"
+            },
+            "bypass": {
+              "title": "Bypass",
+              "description": "Comma-separated domains to bypass proxy",
+              "type": "string",
+              "example": ".com, chromium.org, .domain.com"
+            },
+            "username": {
+              "title": "Username",
+              "description": "Username to use if HTTP proxy requires authentication",
+              "type": "string",
+              "example": "username"
+            },
+            "password": {
+              "title": "Password",
+              "description": "Password to use if HTTP proxy requires authentication",
+              "type": "string",
+              "example": "password"
+            }
+          },
+          "required": [ "server" ],
+          "additionalProperties": false
+        },
         "timeout": {
           "title": "Timeout",
           "description": "Maximum time to wait for navigations or actions, in milliseconds",
@@ -90,40 +123,47 @@
             "title": "Items",
             "description": "Output report format",
             "type": "string",
-            "enum": [ "html", "json" ]
+            "enum": [ "html", "json", "influxdb" ]
           }
         },
-        "proxy": {
-          "title": "Proxy",
-          "description": "Network proxy settings",
+        "influxdb": {
+          "title": "InfluxDB",
+          "description": "InfluxDB connection configuration",
           "type": "object",
           "properties": {
-            "server": {
-              "title": "Server",
-              "description": "Proxy to be used for all requests",
+            "url": {
+              "title": "URL",
+              "description": "Base URL",
               "type": "string",
-              "example": "http://myproxy.com:3128"
+              "format": "uri",
+              "example": "http://localhost:8086"
             },
-            "bypass": {
-              "title": "Bypass",
-              "description": "Comma-separated domains to bypass proxy",
+            "token": {
+              "title": "Token",
+              "description": "Authentication token",
               "type": "string",
-              "example": ".com, chromium.org, .domain.com"
+              "example": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             },
-            "username": {
-              "title": "Username",
-              "description": "Username to use if HTTP proxy requires authentication",
+            "org": {
+              "title": "Organisation",
+              "description": "Destination organisation for writes",
               "type": "string",
-              "example": "username"
+              "example": "my-org"
             },
-            "password": {
-              "title": "Password",
-              "description": "Password to use if HTTP proxy requires authentication",
+            "bucket": {
+              "title": "Bucket",
+              "description": "Destination bucket for writes",
               "type": "string",
-              "example": "password"
+              "example": "my-bucket"
+            },
+            "prefix": {
+              "title": "Prefix",
+              "description": "Measurement name prefix",
+              "type": "string",
+              "example": "eco_"
             }
           },
-          "requiredProperties": [ "server" ],
+          "required": [ "url", "token", "org", "bucket" ],
           "additionalProperties": false
         },
         "dryRun": {

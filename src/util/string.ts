@@ -44,3 +44,15 @@ export function trimEndDot(str: string) {
     }
     return str.replace(/\.+$/, "");
 }
+
+/**
+ * Escape the given characters in the string.
+ * @param str The input string
+ * @param chars Characters to escape (properly escaped themselves to be
+ * injected into a regex character class)
+ * @param prefix String to add before each character to escape
+ * @returns The string with characters escaped
+ */
+export function escapeChars(str: string, chars: string, prefix = "\\") {
+    return str?.replace(new RegExp(`([${chars}])`, "g"), `${prefix}$1`);
+}

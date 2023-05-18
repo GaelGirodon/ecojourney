@@ -1,8 +1,25 @@
 import assert from "node:assert/strict";
 import { format as _ } from "node:util";
-import { groupReduce, omit, pick } from "./object.js";
+import { groupReduce, isObject, merge, omit, pick } from "./object.js";
 
 describe("object", () => {
+    describe("#isObject()", () => {
+        for (const t of [
+            { input: undefined, output: false },
+            { input: null, output: false },
+            { input: "", output: false },
+            { input: "a-string", output: false },
+            { input: [1, 2, 3], output: false },
+            { input: {}, output: true },
+            { input: new Object(), output: true },
+            { input: new Map(), output: true }
+        ]) {
+            it(_("should return %O for %O", t.output, t.input), () => {
+                assert.equal(isObject(t.input), t.output);
+            });
+        }
+    });
+
     describe("#pick()", () => {
         for (const t of [
             { object: {}, keys: [], output: {} },
@@ -26,6 +43,19 @@ describe("object", () => {
                 assert.deepEqual(omit(t.object, t.keys as any), t.output);
             });
         }
+    });
+
+    describe("#merge()", () => {
+        it("should merge objects deeply", () => {
+            const objects = [
+                { a: 1, b: { c: 2, d: { e: 3 } }, f: 4 },
+                { a: [11] },
+                { b: { c: 22 } },
+                { b: { d: { e: { g: 44 } } } }
+            ];
+            const expected = { a: [11], b: { c: 22, d: { e: { g: 44 } } }, f: 4 };
+            assert.deepEqual(merge(...objects), expected);
+        });
     });
 
     describe("#groupReduce()", () => {

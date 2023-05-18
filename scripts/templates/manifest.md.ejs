@@ -84,10 +84,10 @@ config:
 | Name | Description | Type | Default | Values |
 | ---- | ----------- | ---- | ------- | ------ |
 <% for (const [k, v] of Object.entries(config.properties)) { -%>
-| `<%- k %>` | <%- v.description %> | `<%- v.type %>` | <% if (k in defaultConfig) { %>`<%- defaultConfig[k] %>` <% } %> | <%- (v.items?.enum ?? v.enum ?? []).map(e => `\`${e}\``).join(", ") %> |
+| `<%- k %>` | <%- v.description %> | `<%- v.type %>` | <% if (k in defaultConfig && v.type !== "object") { %>`<%- defaultConfig[k] %>` <% } %> | <%- (v.items?.enum ?? v.enum ?? []).map(e => `\`${e}\``).join(", ") %> |
 <% if (v.type === "object" && v.properties) { -%>
 <% for (const [sk, sv] of Object.entries(v.properties)) { -%>
-| ∟ `<%- sk %>` | <%- sv.description %> | `<%- sv.type %>` | <%- (sv.items?.enum ?? sv.enum ?? []).map(e => `\`${e}\``).join(", ") %> |
+| ∟ `<%- sk %>` | <%- sv.description %> | `<%- sv.type %>` | <% if (k in defaultConfig && sk in defaultConfig[k]) { %>`<%- defaultConfig[k][sk] %>` <% } %> | <%- (sv.items?.enum ?? sv.enum ?? []).map(e => `\`${e}\``).join(", ") %> |
 <% } -%>
 <% } -%>
 <% } -%>

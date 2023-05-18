@@ -63,6 +63,14 @@ export class Measure {
     }
 
     /**
+     * Returns whether this measure is important or not.
+     * @returns true if the measure is important
+     */
+    isPrimary(): boolean {
+        return this.metric.order < 50;
+    }
+
+    /**
      * Add a measure value to the current aggregated measure value
      * using the adequate aggregation function.
      * @param measure The measure to add
@@ -83,7 +91,7 @@ export class Measure {
     /**
      * @returns The object to serialize as JSON
      */
-    public toJSON() {
+    toJSON() {
         const output: { [key: string]: any } = {
             id: this.metric.id,
             time: this.time,

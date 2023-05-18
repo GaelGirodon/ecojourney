@@ -1,4 +1,13 @@
 /**
+ * Test whether the input value is an object or not.
+ * @param v The value to test
+ * @returns true if the value is an object
+ */
+export function isObject(v: any): boolean {
+    return !!v && typeof v === "object" && !Array.isArray(v);
+}
+
+/**
  * Create an object composed of the picked object keys.
  * @param object The source object
  * @param keys The keys to pick
@@ -26,6 +35,23 @@ export function omit<T extends Object, K extends keyof T>(object: T, keys: K[]):
         delete output[k];
     }
     return output;
+}
+
+/**
+ * Merge multiple objects deeply.
+ * @param objects Objects to merge
+ * @returns The merged object
+ */
+export function merge(...objects: any[]): any {
+    const target: any = {};
+    for (const src of objects) {
+        for (const key of Object.keys(src)) {
+            target[key] = isObject(target[key]) && isObject(src[key])
+                ? merge(target[key], src[key])
+                : src[key];
+        }
+    }
+    return target;
 }
 
 /**

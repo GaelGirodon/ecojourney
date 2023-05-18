@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { capitalise, slugify, trimEndDot, uncapitalise } from "./string.js";
+import { capitalise, escapeChars, slugify, trimEndDot, uncapitalise } from "./string.js";
 
 describe("string", () => {
     describe("#capitalise()", () => {
@@ -61,6 +61,19 @@ describe("string", () => {
         ]) {
             it(`should return '${t.output}' for '${t.str}'`, () => {
                 assert.equal(trimEndDot(t.str!), t.output);
+            });
+        }
+    });
+
+    describe("#escapeChars()", () => {
+        for (const t of [
+            { str: "", chars: ", ", output: "" },
+            { str: "nothing-to-escape", chars: ", ", output: "nothing-to-escape" },
+            { str: "Escape, please!", chars: ", ", output: "Escape\\,\\ please!" },
+            { str: "\"Escape\"", chars: "\"", output: "\\\"Escape\\\"" },
+        ]) {
+            it(`should return '${t.output}' for '${t.str}' with chars '${t.chars}'`, () => {
+                assert.equal(escapeChars(t.str, t.chars), t.output);
             });
         }
     });

@@ -21,7 +21,12 @@ describe(programName, () => {
         // Setup
         const data = join(fileURLToPath(import.meta.url), "../data");
         const output = join(data, "../output");
-        const config: Config = { ...defaultConfig, output, verbose: true };
+        const config = {
+            ...defaultConfig,
+            output,
+            formats: ["html", "json", "influxdb"],
+            verbose: true
+        } as Config;
         env.USER_PASSWORD = env.ADMIN_PASSWORD = "password";
         await mkdir(output, { recursive: true });
 

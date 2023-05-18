@@ -73,6 +73,7 @@ export class Audit {
             // Launch the browser
             await this.ctx.launchBrowser();
             await this.ctx.newPage();
+            let startTime = new Date();
 
             // Run actions and analyse
             const results: PageResult[] = [];
@@ -84,12 +85,13 @@ export class Audit {
                 if (action instanceof PageAction && !this.ctx.scenario.exclude) {
                     // Analyse the current page with collected requests & responses
                     const page: PageArtifact = {
-                        ...this.collector.dump(),
+                        ...this.collector.dump(), startTime,
                         index: this.ctx.actionIndex(action, true),
                         name: output?.name ?? action.name,
                         frame: this.ctx.page().mainFrame()
                     };
                     results.push(await this.analyser.analyse(page, this.ctx.scenario));
+                    startTime = new Date();
                 }
             }
             this.results = results;

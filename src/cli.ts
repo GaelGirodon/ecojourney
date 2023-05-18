@@ -74,7 +74,7 @@ export function cli(): Command {
             .env(`${envPrefix}_AUDIT_OUTPUT`))
         .addOption(new Option("-f, --format [formats...]",
             "output report formats")
-            .choices(["html", "json"])
+            .choices(["html", "json", "influxdb"])
             .env(`${envPrefix}_AUDIT_FORMAT`)
             .attributeName("formats"))
         .addOption(new Option("-s, --dry-run",

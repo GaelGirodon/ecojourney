@@ -11,6 +11,9 @@ export interface PageArtifact {
     /** Page name */
     readonly name: string;
 
+    /** Time at which the navigation to this page started */
+    readonly startTime: Date;
+
     /** Collected requests */
     readonly requests: RequestArtifact[];
 
