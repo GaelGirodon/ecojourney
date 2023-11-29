@@ -1,8 +1,9 @@
 import http from "node:http";
+import https from "node:https";
 
 /**
  * Send an HTTP request.
- * This function is a basic wrapper around Node.js http.request() to be used
+ * This function is a basic wrapper around Node.js http[s].request() to be used
  * internally until the Fetch API reaches a stable state (it has some weird
  * behavior for now like hanging the Mocha process during E2E testing).
  * @param url The target URL
@@ -22,8 +23,9 @@ export async function request(url: string, opts: RequestOptions): Promise<Respon
         options.headers["Content-Length"] = opts.body.byteLength;
     }
 
+    const proto = u.protocol.slice(0, -1) as "http" | "https";
     return new Promise((resolve, reject) => {
-        const req = http.request(options, (res) => {
+        const req = ({ http, https })[proto].request(options, (res) => {
             let data = "";
             res.setEncoding("utf8");
             res.on("data", (chunk) => {
@@ -44,7 +46,7 @@ export async function request(url: string, opts: RequestOptions): Promise<Respon
             req.write(opts.body);
         }
         req.end();
-    })
+    });
 }
 
 /**

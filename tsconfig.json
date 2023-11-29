@@ -3,7 +3,7 @@
     /* Language and Environment */
     "target": "ESNext",
     /* Modules */
-    "module": "ESNext",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     /* Emit */
     "declaration": true,
